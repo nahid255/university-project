@@ -1,0 +1,6 @@
+{
+  "name": "CampusMate - University Student Ecosystem",
+  "description": "Your Entire Campus, Connected. Modern university student ecosystem with academics, community, marketplace, book exchange, campus events, clubs, and messaging.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

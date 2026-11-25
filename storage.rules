@@ -1,0 +1,81 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isSafeImage(maxMB) {
+      return isAuthenticated() &&
+        request.resource.size < maxMB * 1024 * 1024 &&
+        request.resource.contentType.matches('image/.*');
+    }
+
+    // =========================================================
+    // V1 STORAGE PATHS (PRESERVED)
+    // =========================================================
+
+    // Lost & Found item pictures (images only, max 5MB)
+    match /lost-found/{itemId}/{fileName} {
+      allow read: if isAuthenticated();
+      allow write: if isSafeImage(5);
+    }
+
+    // Study Resources (PDF, Office docs, text, images, max 25MB)
+    match /study-resources/{resourceId}/{fileName} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() &&
+        request.resource.size < 25 * 1024 * 1024 &&
+        (request.resource.contentType.matches('application/pdf') ||
+         request.resource.contentType.matches('application/.*document.*') ||
+         request.resource.contentType.matches('application/.*presentation.*') ||
+         request.resource.contentType.matches('text/.*') ||
+         request.resource.contentType.matches('image/.*'));
+    }
+
+    // User profile avatars (images only, max 2MB, owner-scoped)
+    match /avatars/{userId}/{fileName} {
+      allow read: if isAuthenticated();
+      allow write: if isSafeImage(2) && request.auth.uid == userId;
+    }
+
+    // Notice attachments (PDF/Docs/Images, max 10MB)
+    match /notices/{noticeId}/{fileName} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() &&
+        request.resource.size < 10 * 1024 * 1024 &&
+        (request.resource.contentType.matches('application/pdf') ||
+         request.resource.contentType.matches('application/.*document.*') ||
+         request.resource.contentType.matches('image/.*'));
+    }
+
+    // =========================================================
+    // V2 STORAGE PATHS
+    // =========================================================
+
+    // Community post images (images only, max 5MB)
+    match /community/{postId}/{fileName} {
+      allow read: if isAuthenticated();
+      allow write: if isSafeImage(5);
+    }
+
+    // Marketplace & Book Exchange listing images (images only, max 5MB)
+    match /marketplace/{listingId}/{fileName} {
+      allow read: if isAuthenticated();
+      allow write: if isSafeImage(5);
+    }
+
+    // Event banners (images only, max 5MB)
+    match /events/{eventId}/{fileName} {
+      allow read: if isAuthenticated();
+      allow write: if isSafeImage(5);
+    }
+
+    // Club logos & banners (images only, max 5MB)
+    match /clubs/{clubId}/{fileName} {
+      allow read: if isAuthenticated();
+      allow write: if isSafeImage(5);
+    }
+  }
+}
