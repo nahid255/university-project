@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FileCheck2, Calendar, Clock, MapPin, Search, Filter, AlertCircle } from 'lucide-react';
+import { FileCheck2, Calendar, Clock, MapPin, Search, AlertCircle } from 'lucide-react';
 import { getExams } from '../../services/academicService';
 import { ExamSchedule } from '../../types';
 import { Badge } from '../../components/common/Badge';
@@ -47,48 +47,47 @@ export const ExamsPage: React.FC = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const diffTime = examDate.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays;
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-7">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
-            <FileCheck2 className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+          <h1 className="jstu-page-title flex items-center gap-3">
+            <FileCheck2 className="w-7 h-7 text-indigo-600 dark:text-indigo-400 shrink-0" />
             <span>Examination Schedule</span>
           </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Official Midterm & Final Examination Dates & Hall Allocations
+          <p className="jstu-secondary mt-1.5">
+            Official Midterm &amp; Final Examination Dates and Hall Allocations
           </p>
         </div>
 
-        <div className="flex items-center gap-2 text-xs bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 px-3.5 py-2 rounded-2xl border border-purple-200 dark:border-purple-800">
-          <AlertCircle className="w-4 h-4 shrink-0" />
-          <span>Please carry your valid University ID Card to all examination halls</span>
+        <div className="flex items-center gap-2.5 text-sm bg-indigo-50 dark:bg-indigo-950/50 text-indigo-800 dark:text-indigo-200 px-4 py-2.5 rounded-xl border border-indigo-200/80 dark:border-indigo-800/70">
+          <AlertCircle className="w-4 h-4 shrink-0 text-indigo-600 dark:text-indigo-400" />
+          <span>Carry your valid JSTU University ID Card to all examination halls</span>
         </div>
       </div>
 
       {/* Search & Filters */}
-      <div className="flex flex-col sm:flex-row items-center gap-3">
-        <div className="relative flex-1 w-full">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+      <div className="jstu-surface p-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+        <div className="relative flex-1">
+          <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by course code, title, or exam hall..."
-            className="w-full pl-10 pr-4 py-2.5 rounded-2xl text-xs bg-white dark:bg-[#111C32] border border-slate-200/80 dark:border-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="jstu-input pl-11"
           />
         </div>
 
-        <div className="flex items-center gap-2 w-full sm:w-auto">
+        <div className="sm:w-56">
           <select
             value={selectedType}
             onChange={(e) => setSelectedType(e.target.value)}
-            className="w-full sm:w-auto px-3.5 py-2.5 rounded-2xl text-xs bg-white dark:bg-[#111C32] border border-slate-200/80 dark:border-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-purple-500 font-semibold"
+            className="jstu-select"
           >
             <option value="all">All Exam Types</option>
             <option value="Midterm">Midterm</option>
@@ -114,11 +113,11 @@ export const ExamsPage: React.FC = () => {
             return (
               <div
                 key={exam.id}
-                className="bg-white dark:bg-[#111C32] rounded-3xl p-6 border border-slate-200/80 dark:border-slate-800 shadow-xs hover:border-purple-300 dark:hover:border-purple-700 transition-all flex flex-col justify-between"
+                className="jstu-surface p-6 hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors flex flex-col justify-between"
               >
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono text-xs font-black px-2.5 py-1 rounded-lg bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="font-mono text-sm font-semibold px-2.5 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200/80 dark:border-indigo-800/70">
                       {exam.courseCode}
                     </span>
                     <Badge variant="purple" size="sm">
@@ -127,38 +126,40 @@ export const ExamsPage: React.FC = () => {
                   </div>
 
                   <div>
-                    <h3 className="text-sm font-bold text-slate-900 dark:text-white leading-snug">
+                    <h2 className="jstu-card-title">
                       {exam.courseName}
-                    </h3>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                      Invigilator: <span className="font-medium text-slate-700 dark:text-slate-300">{exam.instructor}</span>
+                    </h2>
+                    <p className="text-[15px] text-slate-600 dark:text-slate-400 mt-1.5">
+                      Invigilator:{' '}
+                      <span className="font-medium text-slate-800 dark:text-slate-200">
+                        {exam.instructor}
+                      </span>
                     </p>
                   </div>
 
-                  {/* Countdown Badge */}
-                  <div className="py-2 px-3 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800 flex items-center justify-between text-xs">
-                    <span className="text-slate-500 dark:text-slate-400">Countdown:</span>
+                  <div className="py-2.5 px-3.5 rounded-xl jstu-inset flex items-center justify-between text-sm">
+                    <span className="text-slate-600 dark:text-slate-400">Countdown</span>
                     <span
-                      className={`font-extrabold ${
+                      className={`font-semibold tabular-nums ${
                         daysLeft <= 3
                           ? 'text-rose-600 dark:text-rose-400'
                           : daysLeft <= 7
                           ? 'text-amber-600 dark:text-amber-400'
-                          : 'text-purple-600 dark:text-purple-400'
+                          : 'text-indigo-600 dark:text-indigo-400'
                       }`}
                     >
                       {daysLeft < 0
                         ? 'Completed'
                         : daysLeft === 0
-                        ? 'Today!'
+                        ? 'Today'
                         : `${daysLeft} days remaining`}
                     </span>
                   </div>
                 </div>
 
-                <div className="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800 space-y-2 text-xs">
-                  <div className="flex items-center gap-2 text-slate-700 dark:text-slate-200 font-semibold">
-                    <Calendar className="w-4 h-4 text-purple-600 dark:text-purple-400 shrink-0" />
+                <div className="mt-5 pt-4 border-t border-slate-200/80 dark:border-slate-800 space-y-2 text-[15px]">
+                  <div className="flex items-center gap-2 text-slate-900 dark:text-slate-100 font-semibold tabular-nums">
+                    <Calendar className="w-4 h-4 text-indigo-600 dark:text-indigo-400 shrink-0" />
                     <span>
                       {new Date(exam.examDate).toLocaleDateString('en-US', {
                         weekday: 'short',
@@ -168,13 +169,13 @@ export const ExamsPage: React.FC = () => {
                       })}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-[11px]">
-                    <span className="flex items-center gap-1.5">
-                      <Clock className="w-3.5 h-3.5" />
+                  <div className="flex items-center justify-between text-sm text-slate-600 dark:text-slate-400">
+                    <span className="flex items-center gap-1.5 tabular-nums">
+                      <Clock className="w-4 h-4 shrink-0" />
                       <span>{exam.startTime} - {exam.endTime}</span>
                     </span>
                     <span className="flex items-center gap-1.5 font-medium text-slate-700 dark:text-slate-300">
-                      <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                      <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
                       <span>{exam.roomNumber}</span>
                     </span>
                   </div>

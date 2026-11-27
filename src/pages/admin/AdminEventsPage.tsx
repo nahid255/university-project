@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {
-  CalendarHeart,
   Plus,
   Edit3,
   Trash2,
@@ -233,119 +232,122 @@ export const AdminEventsPage: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
-            <CalendarHeart className="w-6 h-6 text-purple-600" />
-            <span>Campus Events Management</span>
-          </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Create, publish, cancel events, and manage student capacities &amp; waitlists
+    <div className="space-y-6 sm:space-y-8">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div className="space-y-1.5">
+          <h1 className="jstu-page-title">Campus Events Management</h1>
+          <p className="jstu-secondary">
+            Create, publish, or cancel official events and manage student capacities and waitlists.
           </p>
         </div>
 
         <button
           onClick={openCreateModal}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-2xl text-xs font-bold shadow-md shadow-purple-500/20 self-start sm:self-auto"
+          className="inline-flex items-center justify-center gap-2 min-h-[42px] px-5 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-[15px] font-semibold shadow-xs transition-colors self-start sm:self-auto shrink-0"
         >
           <Plus className="w-4 h-4" />
           <span>Create Event</span>
         </button>
       </div>
 
-      <div className="space-y-3">
-        {events.map((ev) => (
-          <div
-            key={ev.id}
-            className="bg-white dark:bg-[#111C32] rounded-3xl p-5 border border-slate-200/80 dark:border-slate-800 flex flex-col lg:flex-row lg:items-center justify-between gap-4"
-          >
-            <div className="space-y-1.5 min-w-0">
-              <div className="flex flex-wrap items-center gap-2">
-                <Badge
-                  variant={
-                    ev.status === 'published'
-                      ? 'success'
-                      : ev.status === 'cancelled'
-                      ? 'danger'
-                      : 'warning'
-                  }
-                  size="sm"
-                >
-                  {ev.status.toUpperCase()}
-                </Badge>
-                <Badge variant="purple" size="sm">
-                  {ev.category}
-                </Badge>
-                <span className="text-[11px] text-slate-400">
-                  {ev.date} &bull; {ev.startTime} - {ev.endTime}
-                </span>
-              </div>
-              <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
-                {ev.title}
-              </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                {ev.location} &bull; Organizer: {ev.organizer} &bull;{' '}
-                <strong>
-                  {ev.registeredCount}/{ev.capacity}
-                </strong>{' '}
-                registered ({ev.waitlistCount} waitlisted)
-              </p>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-2 shrink-0">
-              <button
-                onClick={() => openRegistrations(ev)}
-                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-200"
-              >
-                <Users className="w-3.5 h-3.5" />
-                <span>Registrations</span>
-              </button>
-
-              {ev.status !== 'published' && (
-                <button
-                  onClick={async () => {
-                    await updateEvent(ev.id, { status: 'published' });
-                    await loadEvents();
-                  }}
-                  className="inline-flex items-center gap-1 px-3 py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold"
-                >
-                  <CheckCircle2 className="w-3.5 h-3.5" />
-                  <span>Publish</span>
-                </button>
-              )}
-
-              {ev.status === 'published' && (
-                <button
-                  onClick={async () => {
-                    await updateEvent(ev.id, { status: 'cancelled' });
-                    await loadEvents();
-                  }}
-                  className="inline-flex items-center gap-1 px-3 py-2 rounded-xl bg-amber-50 text-amber-700 dark:bg-amber-950/50 dark:text-amber-300 text-xs font-bold"
-                >
-                  <XCircle className="w-3.5 h-3.5" />
-                  <span>Cancel</span>
-                </button>
-              )}
-
-              <button
-                onClick={() => openEditModal(ev)}
-                className="p-2 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-blue-600"
-                title="Edit event"
-              >
-                <Edit3 className="w-4 h-4" />
-              </button>
-
-              <button
-                onClick={() => setDeleteTarget(ev)}
-                className="p-2 rounded-xl text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40"
-                title="Delete event"
-              >
-                <Trash2 className="w-4 h-4" />
-              </button>
-            </div>
+      <div className="space-y-4">
+        {events.length === 0 ? (
+          <div className="jstu-surface p-10 text-center jstu-secondary">
+            No campus events created yet.
           </div>
-        ))}
+        ) : (
+          events.map((ev) => (
+            <div
+              key={ev.id}
+              className="jstu-surface p-5 sm:p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-4"
+            >
+              <div className="space-y-2 min-w-0">
+                <div className="flex flex-wrap items-center gap-2.5">
+                  <Badge
+                    variant={
+                      ev.status === 'published'
+                        ? 'success'
+                        : ev.status === 'cancelled'
+                        ? 'danger'
+                        : 'warning'
+                    }
+                    size="sm"
+                  >
+                    {ev.status.toUpperCase()}
+                  </Badge>
+                  <Badge variant="purple" size="sm">
+                    {ev.category}
+                  </Badge>
+                  <span className="jstu-meta tabular-nums">
+                    {ev.date} &middot; {ev.startTime} &ndash; {ev.endTime}
+                  </span>
+                </div>
+                <h3 className="jstu-card-title">{ev.title}</h3>
+                <p className="jstu-secondary tabular-nums">
+                  {ev.location} &middot; Organizer: {ev.organizer} &middot;{' '}
+                  <strong className="font-semibold text-slate-900 dark:text-slate-100">
+                    {ev.registeredCount}/{ev.capacity}
+                  </strong>{' '}
+                  registered ({ev.waitlistCount} waitlisted)
+                </p>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+                <button
+                  onClick={() => openRegistrations(ev)}
+                  className="jstu-btn-secondary"
+                >
+                  <Users className="w-4 h-4" />
+                  <span>Registrations</span>
+                </button>
+
+                {ev.status !== 'published' && (
+                  <button
+                    onClick={async () => {
+                      await updateEvent(ev.id, { status: 'published' });
+                      await loadEvents();
+                    }}
+                    className="inline-flex items-center justify-center gap-1.5 min-h-[42px] px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-[15px] font-semibold transition-colors"
+                  >
+                    <CheckCircle2 className="w-4 h-4" />
+                    <span>Publish</span>
+                  </button>
+                )}
+
+                {ev.status === 'published' && (
+                  <button
+                    onClick={async () => {
+                      await updateEvent(ev.id, { status: 'cancelled' });
+                      await loadEvents();
+                    }}
+                    className="inline-flex items-center justify-center gap-1.5 min-h-[42px] px-4 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 dark:bg-amber-950/50 dark:hover:bg-amber-900/50 dark:text-amber-300 text-[15px] font-semibold transition-colors"
+                  >
+                    <XCircle className="w-4 h-4" />
+                    <span>Cancel</span>
+                  </button>
+                )}
+
+                <button
+                  onClick={() => openEditModal(ev)}
+                  className="p-2.5 rounded-xl bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/50 dark:hover:bg-blue-900/50 text-blue-600 dark:text-blue-400 transition-colors"
+                  title="Edit event"
+                  aria-label={`Edit ${ev.title}`}
+                >
+                  <Edit3 className="w-4 h-4" />
+                </button>
+
+                <button
+                  onClick={() => setDeleteTarget(ev)}
+                  className="p-2.5 rounded-xl text-rose-600 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-950/40 transition-colors"
+                  title="Delete event"
+                  aria-label={`Delete ${ev.title}`}
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          ))
+        )}
       </div>
 
       {/* Create / Edit Event Modal */}
@@ -358,31 +360,29 @@ export const AdminEventsPage: React.FC = () => {
       >
         <form onSubmit={handleSave} className="space-y-4">
           {formError && (
-            <p className="p-3 rounded-xl bg-rose-50 text-rose-700 text-xs">{formError}</p>
+            <p className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 text-sm font-medium">
+              {formError}
+            </p>
           )}
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-              Event Title
-            </label>
+            <label className="jstu-label">Event Title</label>
             <input
               type="text"
               required
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700"
+              className="jstu-input"
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Category
-              </label>
+              <label className="jstu-label">Category</label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value as EventCategory)}
-                className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-semibold"
+                className="jstu-select"
               >
                 {CATEGORIES.map((c) => (
                   <option key={c} value={c}>
@@ -393,13 +393,11 @@ export const AdminEventsPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Status
-              </label>
+              <label className="jstu-label">Status</label>
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value as EventStatus)}
-                className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-semibold"
+                className="jstu-select"
               >
                 <option value="published">Published</option>
                 <option value="draft">Draft</option>
@@ -408,102 +406,88 @@ export const AdminEventsPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Seat Capacity
-              </label>
+              <label className="jstu-label">Seat Capacity</label>
               <input
                 type="number"
                 min="1"
                 required
                 value={capacity}
                 onChange={(e) => setCapacity(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700"
+                className="jstu-input font-mono tabular-nums"
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Date
-              </label>
+              <label className="jstu-label">Date</label>
               <input
                 type="date"
                 required
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700"
+                className="jstu-input font-mono tabular-nums"
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Start Time
-              </label>
+              <label className="jstu-label">Start Time</label>
               <input
                 type="text"
                 required
                 value={startTime}
                 onChange={(e) => setStartTime(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700"
+                className="jstu-input"
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                End Time
-              </label>
+              <label className="jstu-label">End Time</label>
               <input
                 type="text"
                 required
                 value={endTime}
                 onChange={(e) => setEndTime(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700"
+                className="jstu-input"
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Venue / Location
-              </label>
+              <label className="jstu-label">Venue / Location</label>
               <input
                 type="text"
                 required
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700"
+                className="jstu-input"
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Organizer
-              </label>
+              <label className="jstu-label">Organizer</label>
               <input
                 type="text"
                 required
                 value={organizer}
                 onChange={(e) => setOrganizer(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700"
+                className="jstu-input"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-              Description
-            </label>
+            <label className="jstu-label">Description</label>
             <textarea
               rows={3}
               required
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700"
+              className="jstu-textarea"
             />
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center gap-2.5">
-            <label className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-semibold cursor-pointer border border-slate-200 dark:border-slate-700">
-              <Camera className="w-4 h-4 text-purple-600" />
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            <label className="jstu-btn-secondary cursor-pointer shrink-0">
+              <Camera className="w-4 h-4 text-purple-600 dark:text-purple-400" />
               <span>{isUploading ? 'Uploading...' : 'Banner Image'}</span>
               <input
                 type="file"
@@ -517,22 +501,22 @@ export const AdminEventsPage: React.FC = () => {
               value={imageUrl}
               onChange={(e) => setImageUrl(e.target.value)}
               placeholder="Or paste https:// banner URL"
-              className="flex-1 w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700"
+              className="jstu-input flex-1"
             />
           </div>
 
-          <div className="flex justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+          <div className="flex justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
-              className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300"
+              className="jstu-btn-secondary"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isUploading}
-              className="px-5 py-2 rounded-xl text-xs font-bold bg-purple-600 text-white"
+              className="inline-flex items-center justify-center min-h-[42px] px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white text-[15px] font-semibold transition-colors"
             >
               {editing ? 'Save Changes' : 'Create Event'}
             </button>
@@ -548,24 +532,24 @@ export const AdminEventsPage: React.FC = () => {
         description="View confirmed attendees and waitlisted students"
         maxWidth="lg"
       >
-        <div className="max-h-80 overflow-y-auto space-y-2">
+        <div className="max-h-96 overflow-y-auto space-y-2.5">
           {registrations.length === 0 ? (
-            <p className="text-xs text-slate-400 text-center py-6">
+            <p className="jstu-secondary text-center py-8">
               No registrations recorded yet.
             </p>
           ) : (
             registrations.map((reg) => (
               <div
                 key={reg.id}
-                className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800 flex items-center justify-between gap-3"
+                className="jstu-inset p-3.5 flex items-center justify-between gap-3"
               >
-                <div>
-                  <p className="text-xs font-bold text-slate-900 dark:text-white">
-                    {reg.userName} ({reg.studentId})
+                <div className="min-w-0">
+                  <p className="text-[15px] font-semibold text-slate-900 dark:text-slate-100 truncate">
+                    {reg.userName} <span className="font-mono text-sm">({reg.studentId})</span>
                   </p>
-                  <p className="text-[11px] text-slate-400">{reg.userEmail}</p>
+                  <p className="jstu-meta truncate">{reg.userEmail}</p>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3 shrink-0">
                   <Badge
                     variant={
                       reg.status === 'registered'
@@ -581,7 +565,7 @@ export const AdminEventsPage: React.FC = () => {
                   {reg.status !== 'cancelled' && (
                     <button
                       onClick={() => handleCancelParticipant(reg)}
-                      className="text-xs font-bold text-rose-600 hover:underline"
+                      className="text-sm font-semibold text-rose-600 dark:text-rose-400 hover:underline"
                     >
                       Cancel
                     </button>

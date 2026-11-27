@@ -39,33 +39,32 @@ export const Modal: React.FC<ModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
-      <div className="flex min-h-screen items-center justify-center p-4 text-center">
-        {/* Backdrop */}
+    <div className="fixed inset-0 z-50 overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div className="flex min-h-screen items-center justify-center p-4 sm:p-6 text-center">
         <div
           className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"
           onClick={onClose}
           aria-hidden="true"
         />
 
-        {/* Modal Card */}
         <div
-          className={`relative w-full ${maxWidthStyles[maxWidth]} transform overflow-hidden rounded-2xl bg-white dark:bg-[#111C32] p-6 text-left align-middle shadow-2xl transition-all border border-slate-200 dark:border-slate-800 animate-in zoom-in-95 duration-200`}
+          className={`relative w-full ${maxWidthStyles[maxWidth]} transform overflow-hidden rounded-2xl bg-white dark:bg-[#111827] p-6 sm:p-7 text-left align-middle shadow-2xl transition-all border border-slate-200 dark:border-slate-800 animate-in zoom-in-95 duration-200`}
         >
-          <div className="flex items-start justify-between pb-4 border-b border-slate-100 dark:border-slate-800/80 mb-5">
+          <div className="flex items-start justify-between gap-4 pb-4 border-b border-slate-200/80 dark:border-slate-800 mb-6">
             <div>
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white leading-6">
+              <h3 id="modal-title" className="text-xl font-semibold text-slate-950 dark:text-white leading-snug">
                 {title}
               </h3>
               {description && (
-                <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                <p className="mt-1.5 text-[15px] text-slate-600 dark:text-slate-400 leading-relaxed">
                   {description}
                 </p>
               )}
             </div>
             <button
+              type="button"
               onClick={onClose}
-              className="rounded-lg p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus:outline-none"
+              className="rounded-xl p-2 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shrink-0 min-w-[40px] min-h-[40px] flex items-center justify-center"
               aria-label="Close modal"
             >
               <X className="h-5 w-5" />

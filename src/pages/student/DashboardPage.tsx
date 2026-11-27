@@ -11,18 +11,18 @@ import {
   Clock,
   ArrowRight,
   MapPin,
-  Sparkles,
   Users,
   CalendarHeart,
   ShoppingBag,
   BookCopy,
   Award,
   MessageSquare,
-  Globe,
   SlidersHorizontal,
   BellRing,
   Heart,
   MessageCircle,
+  FlaskConical,
+  Bus,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { getRoutines, getExams, getAssignments, createAssignment } from '../../services/academicService';
@@ -82,11 +82,9 @@ export const DashboardPage: React.FC = () => {
   const [marketplaceHighlights, setMarketplaceHighlights] = useState<MarketplaceListing[]>([]);
   const [notifications, setNotifications] = useState<AppNotification[]>([]);
 
-  // Customizable Widget Visibility
   const [widgets, setWidgets] = useState<DashboardWidgetsConfig>(DEFAULT_WIDGETS);
   const [isCustomizeOpen, setIsCustomizeOpen] = useState(false);
 
-  // Quick Assignment Modal
   const [isAddAssignmentOpen, setIsAddAssignmentOpen] = useState(false);
   const [newTitle, setNewTitle] = useState('');
   const [newCourseCode, setNewCourseCode] = useState('CSE 301');
@@ -216,88 +214,183 @@ export const DashboardPage: React.FC = () => {
     year: 'numeric',
   }).format(new Date());
 
+  const quickServices = [
+    {
+      to: '/transportation',
+      icon: Bus,
+      iconBg: 'bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400',
+      title: 'Transportation',
+      sub: 'Bus routes & times',
+    },
+    {
+      to: '/mylab',
+      icon: FlaskConical,
+      iconBg: 'bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400',
+      title: 'My Lab',
+      sub: 'CS virtual lab',
+    },
+    {
+      to: '/academic/routine',
+      icon: CalendarDays,
+      iconBg: 'bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400',
+      title: 'Class Routine',
+      sub: 'Weekly timetable',
+    },
+    {
+      to: '/academic/assignments',
+      icon: CheckSquare,
+      iconBg: 'bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400',
+      title: 'Assignments',
+      sub: 'Deadlines & tasks',
+    },
+    {
+      to: '/notices',
+      icon: Bell,
+      iconBg: 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400',
+      title: 'Notice Board',
+      sub: 'Official circulars',
+    },
+    {
+      to: '/resources',
+      icon: BookOpen,
+      iconBg: 'bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400',
+      title: 'Study Resources',
+      sub: 'Notes & past papers',
+    },
+    {
+      to: '/community',
+      icon: Users,
+      iconBg: 'bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400',
+      title: 'Community',
+      sub: 'Discussions & Q&A',
+    },
+    {
+      to: '/messages',
+      icon: MessageSquare,
+      iconBg: 'bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400',
+      title: 'Messages',
+      sub: 'Peer direct chat',
+    },
+    {
+      to: '/events',
+      icon: CalendarHeart,
+      iconBg: 'bg-fuchsia-50 dark:bg-fuchsia-950/60 text-fuchsia-600 dark:text-fuchsia-400',
+      title: 'Campus Events',
+      sub: 'RSVP & workshops',
+    },
+    {
+      to: '/clubs',
+      icon: Award,
+      iconBg: 'bg-orange-50 dark:bg-orange-950/60 text-orange-600 dark:text-orange-400',
+      title: 'Student Clubs',
+      sub: 'Campus societies',
+    },
+    {
+      to: '/marketplace',
+      icon: ShoppingBag,
+      iconBg: 'bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400',
+      title: 'Marketplace',
+      sub: 'Student buy & sell',
+    },
+    {
+      to: '/books',
+      icon: BookCopy,
+      iconBg: 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400',
+      title: 'Book Exchange',
+      sub: 'Trade textbooks',
+    },
+    {
+      to: '/lost-found',
+      icon: Search,
+      iconBg: 'bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400',
+      title: 'Lost & Found',
+      sub: 'Report & claim',
+    },
+  ];
+
   return (
-    <div className="space-y-6">
-      {/* Welcome Banner */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-700 via-blue-600 to-indigo-700 text-white p-6 sm:p-8 shadow-lg shadow-blue-500/15">
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur-sm text-xs font-medium text-blue-100">
-              <Sparkles className="w-3.5 h-3.5 text-blue-200" />
-              <span>{formattedDate}</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-              Welcome back, {currentUser?.fullName}!
+    <div className="space-y-8">
+      {/* Clean Institutional Welcome Header */}
+      <section className="jstu-surface p-6 sm:p-8">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div className="space-y-2.5">
+            <p className="text-sm font-medium text-blue-600 dark:text-blue-400">
+              {formattedDate}
+            </p>
+            <h1 className="jstu-page-title">
+              Welcome back, {currentUser?.fullName}
             </h1>
-            <p className="text-xs sm:text-sm text-blue-100 max-w-xl leading-relaxed">
-              {currentUser?.department} &bull; Student ID:{' '}
-              <span className="font-mono font-bold text-white">{currentUser?.studentId}</span>{' '}
-              &bull; {currentUser?.batch}
+            <p className="text-[15px] text-slate-600 dark:text-slate-300 leading-relaxed">
+              {currentUser?.department} &middot;{' '}
+              <span className="font-mono font-semibold text-slate-900 dark:text-slate-100">
+                {currentUser?.studentId}
+              </span>{' '}
+              &middot; {currentUser?.batch}
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2.5">
+          <div className="flex flex-wrap items-center gap-3">
             <button
               onClick={() => setIsAddAssignmentOpen(true)}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white text-blue-700 hover:bg-blue-50 text-xs font-bold shadow-sm transition-all"
+              className="jstu-btn-primary"
             >
               <PlusCircle className="w-4 h-4" />
               <span>New Assignment</span>
             </button>
-            <Link
-              to="/academic/routine"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-800/80 hover:bg-blue-800 text-white text-xs font-bold backdrop-blur-sm border border-white/20 transition-all"
-            >
+            <Link to="/academic/routine" className="jstu-btn-secondary">
               <CalendarDays className="w-4 h-4" />
               <span>View Routine</span>
             </Link>
+            <Link to="/mylab" className="jstu-btn-secondary">
+              <FlaskConical className="w-4 h-4" />
+              <span>Open My Lab</span>
+            </Link>
             <button
               onClick={() => setIsCustomizeOpen(true)}
-              className="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-white text-xs font-bold backdrop-blur-sm border border-white/20 transition-all"
+              className="jstu-btn-secondary"
+              aria-label="Customize dashboard widgets"
             >
               <SlidersHorizontal className="w-4 h-4" />
               <span>Customize</span>
             </button>
           </div>
         </div>
-
-        <div className="absolute -right-12 -bottom-12 w-64 h-64 rounded-full bg-white/10 blur-2xl pointer-events-none" />
-      </div>
+      </section>
 
       {/* Overview KPI Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-5 rounded-2xl bg-white dark:bg-[#111C32] border border-slate-200/80 dark:border-slate-800 shadow-xs">
+      <section className="grid grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="jstu-surface p-6">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+            <span className="text-sm font-semibold text-slate-600 dark:text-slate-400">
               Today&apos;s Classes
             </span>
-            <div className="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center">
-              <CalendarDays className="w-4 h-4" />
+            <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+              <CalendarDays className="w-5 h-5" />
             </div>
           </div>
-          <div className="text-2xl font-black text-slate-900 dark:text-white">
+          <div className="text-3xl font-bold text-slate-950 dark:text-white tabular-nums">
             {todayClasses.length}
           </div>
-          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1.5">
             {currentDayOfWeek} Schedule
           </p>
         </div>
 
-        <div className="p-5 rounded-2xl bg-white dark:bg-[#111C32] border border-slate-200/80 dark:border-slate-800 shadow-xs">
+        <div className="jstu-surface p-6">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+            <span className="text-sm font-semibold text-slate-600 dark:text-slate-400">
               Pending Tasks
             </span>
-            <div className="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center">
-              <CheckSquare className="w-4 h-4" />
+            <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+              <CheckSquare className="w-5 h-5" />
             </div>
           </div>
-          <div className="text-2xl font-black text-slate-900 dark:text-white">
+          <div className="text-3xl font-bold text-slate-950 dark:text-white tabular-nums">
             {pendingAssignments.length}
           </div>
-          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1.5">
             {overdueAssignments.length > 0 ? (
-              <span className="text-rose-600 dark:text-rose-400 font-semibold">
+              <span className="text-rose-600 dark:text-rose-400 font-semibold tabular-nums">
                 {overdueAssignments.length} overdue
               </span>
             ) : (
@@ -306,215 +399,138 @@ export const DashboardPage: React.FC = () => {
           </p>
         </div>
 
-        <div className="p-5 rounded-2xl bg-white dark:bg-[#111C32] border border-slate-200/80 dark:border-slate-800 shadow-xs">
+        <div className="jstu-surface p-6">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+            <span className="text-sm font-semibold text-slate-600 dark:text-slate-400">
               Upcoming Events
             </span>
-            <div className="w-8 h-8 rounded-xl bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center">
-              <CalendarHeart className="w-4 h-4" />
+            <div className="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+              <CalendarHeart className="w-5 h-5" />
             </div>
           </div>
-          <div className="text-2xl font-black text-slate-900 dark:text-white">
+          <div className="text-3xl font-bold text-slate-950 dark:text-white tabular-nums">
             {upcomingEvents.length}
           </div>
-          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1.5">
             Campus events open
           </p>
         </div>
 
-        <div className="p-5 rounded-2xl bg-white dark:bg-[#111C32] border border-slate-200/80 dark:border-slate-800 shadow-xs">
+        <div className="jstu-surface p-6">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+            <span className="text-sm font-semibold text-slate-600 dark:text-slate-400">
               Unread Alerts
             </span>
-            <div className="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
-              <BellRing className="w-4 h-4" />
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+              <BellRing className="w-5 h-5" />
             </div>
           </div>
-          <div className="text-2xl font-black text-slate-900 dark:text-white">
+          <div className="text-3xl font-bold text-slate-950 dark:text-white tabular-nums">
             {unreadNotifCount}
           </div>
-          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1.5">
             Notifications &amp; replies
           </p>
         </div>
-      </div>
+      </section>
 
-      {/* Expanded Quick Access Hub */}
-      <div className="bg-white dark:bg-[#111C32] p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
-        <p className="text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider mb-3 px-1">
-          CampusMate Quick Access Hub
-        </p>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
-          {[
-            {
-              to: '/community',
-              icon: Users,
-              color: 'text-blue-600 dark:text-blue-400',
-              title: 'Community',
-              sub: 'Posts & Q&A',
-            },
-            {
-              to: '/marketplace',
-              icon: ShoppingBag,
-              color: 'text-indigo-500',
-              title: 'Marketplace',
-              sub: 'Buy & sell gear',
-            },
-            {
-              to: '/books',
-              icon: BookCopy,
-              color: 'text-emerald-500',
-              title: 'Book Exchange',
-              sub: 'Trade textbooks',
-            },
-            {
-              to: '/events',
-              icon: CalendarHeart,
-              color: 'text-purple-500',
-              title: 'Campus Events',
-              sub: 'RSVP & workshops',
-            },
-            {
-              to: '/clubs',
-              icon: Award,
-              color: 'text-amber-500',
-              title: 'Student Clubs',
-              sub: 'Organizations',
-            },
-            {
-              to: '/messages',
-              icon: MessageSquare,
-              color: 'text-sky-500',
-              title: 'Messages',
-              sub: 'Peer 1-to-1 chat',
-            },
-            {
-              to: '/academic/routine',
-              icon: CalendarDays,
-              color: 'text-blue-500',
-              title: 'Class Routine',
-              sub: 'Weekly timetable',
-            },
-            {
-              to: '/academic/assignments',
-              icon: CheckSquare,
-              color: 'text-amber-600',
-              title: 'Assignments',
-              sub: 'Deadlines & tasks',
-            },
-            {
-              to: '/notices',
-              icon: Bell,
-              color: 'text-emerald-600',
-              title: 'Notice Board',
-              sub: 'Official circulars',
-            },
-            {
-              to: '/lost-found',
-              icon: Search,
-              color: 'text-rose-500',
-              title: 'Lost & Found',
-              sub: 'Report & claim',
-            },
-            {
-              to: '/resources',
-              icon: BookOpen,
-              color: 'text-indigo-600',
-              title: 'Resources',
-              sub: 'Study notes',
-            },
-            {
-              to: '/search',
-              icon: Globe,
-              color: 'text-cyan-500',
-              title: 'Global Search',
-              sub: 'Find anything',
-            },
-          ].map((item) => {
+      {/* Clean Campus Services Directory */}
+      <section className="jstu-surface p-6 sm:p-7">
+        <div className="flex items-center justify-between mb-5">
+          <div>
+            <h2 className="jstu-section-title">Campus Services &amp; Tools</h2>
+            <p className="text-[15px] text-slate-500 dark:text-slate-400 mt-0.5">
+              Direct shortcuts across academics, transport, labs, and community
+            </p>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3.5">
+          {quickServices.map((item) => {
             const Icon = item.icon;
             return (
               <Link
                 key={item.to}
                 to={item.to}
-                className="flex flex-col items-center justify-center p-3 rounded-xl bg-slate-50 hover:bg-blue-50 dark:bg-slate-900 dark:hover:bg-slate-800/80 border border-slate-200/60 dark:border-slate-800 text-center transition-colors group"
+                className="flex items-center gap-3.5 p-3.5 rounded-xl border border-slate-200/80 dark:border-slate-800 hover:border-blue-300 dark:hover:border-blue-700 hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-colors group"
               >
-                <Icon
-                  className={`w-5 h-5 ${item.color} mb-1.5 group-hover:scale-110 transition-transform`}
-                />
-                <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
-                  {item.title}
-                </span>
-                <span className="text-[10px] text-slate-400">{item.sub}</span>
+                <div
+                  className={`w-10 h-10 rounded-xl ${item.iconBg} flex items-center justify-center shrink-0`}
+                >
+                  <Icon className="w-5 h-5" />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-[15px] font-semibold text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors truncate">
+                    {item.title}
+                  </div>
+                  <div className="text-[13px] text-slate-500 dark:text-slate-400 truncate">
+                    {item.sub}
+                  </div>
+                </div>
               </Link>
             );
           })}
         </div>
-      </div>
+      </section>
 
-      {/* Main Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Main Content Columns */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-7">
         {/* Left Column (2 Cols) */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-7">
           {widgets.showClasses && (
-            <div className="bg-white dark:bg-[#111C32] rounded-3xl p-6 border border-slate-200/80 dark:border-slate-800 shadow-xs">
-              <div className="flex items-center justify-between mb-4">
+            <section className="jstu-surface p-6 sm:p-7">
+              <div className="flex items-center justify-between gap-4 pb-4 border-b border-slate-200/80 dark:border-slate-800">
                 <div>
-                  <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                  <h2 className="jstu-section-title flex items-center gap-2.5">
                     <CalendarDays className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                     <span>Today&apos;s Classes ({currentDayOfWeek})</span>
-                  </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    Your daily course lectures and laboratory sessions
+                  </h2>
+                  <p className="text-[15px] text-slate-500 dark:text-slate-400 mt-1">
+                    Your scheduled lectures and laboratory sessions
                   </p>
                 </div>
                 <Link
                   to="/academic/routine"
-                  className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+                  className="text-[15px] font-semibold text-blue-600 dark:text-blue-400 hover:underline inline-flex items-center gap-1.5 shrink-0"
                 >
                   <span>Full Timetable</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
 
               {todayClasses.length === 0 ? (
-                <div className="text-center py-8 text-slate-400 text-xs">
-                  No classes scheduled for today! Enjoy your study or revision time.
+                <div className="text-center py-10 text-slate-500 dark:text-slate-400 text-[15px]">
+                  No classes scheduled for today. Enjoy your independent study time.
                 </div>
               ) : (
-                <div className="space-y-3">
+                <div className="divide-y divide-slate-200/80 dark:divide-slate-800">
                   {todayClasses.map((item) => (
                     <div
                       key={item.id}
-                      className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl bg-slate-50/80 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800 gap-3 hover:border-blue-300 dark:hover:border-blue-700 transition-colors"
+                      className="flex flex-col sm:flex-row sm:items-center justify-between py-4 first:pt-5 last:pb-1 gap-3"
                     >
                       <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                          <span className="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300">
+                        <div className="flex flex-wrap items-center gap-2.5">
+                          <span className="font-mono text-sm font-semibold text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 px-2.5 py-0.5 rounded-md border border-blue-200/70 dark:border-blue-800/70">
                             {item.courseCode}
                           </span>
-                          <h4 className="text-xs font-bold text-slate-900 dark:text-white">
+                          <h3 className="text-base font-semibold text-slate-950 dark:text-white">
                             {item.courseName}
-                          </h4>
+                          </h3>
                         </div>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                          Instructor:{' '}
-                          <span className="font-medium text-slate-700 dark:text-slate-300">
-                            {item.instructorName}
-                          </span>
+                        <p className="text-sm text-slate-600 dark:text-slate-400">
+                          Instructor: <span className="font-medium text-slate-800 dark:text-slate-200">{item.instructorName}</span>
                         </p>
                       </div>
 
-                      <div className="flex sm:flex-col items-center sm:items-end justify-between text-xs text-slate-600 dark:text-slate-300 gap-1 border-t sm:border-t-0 pt-2 sm:pt-0 border-slate-200 dark:border-slate-800">
-                        <div className="inline-flex items-center gap-1 font-semibold text-blue-600 dark:text-blue-400">
-                          <Clock className="w-3.5 h-3.5" />
+                      <div className="flex sm:flex-col items-center sm:items-end justify-between gap-1 shrink-0">
+                        <div className="inline-flex items-center gap-1.5 text-[15px] font-semibold text-blue-600 dark:text-blue-400 tabular-nums">
+                          <Clock className="w-4 h-4" />
                           <span>
                             {item.startTime} - {item.endTime}
                           </span>
                         </div>
-                        <div className="inline-flex items-center gap-1 text-[11px] text-slate-500">
-                          <MapPin className="w-3 h-3" />
+                        <div className="inline-flex items-center gap-1.5 text-sm text-slate-500 dark:text-slate-400">
+                          <MapPin className="w-4 h-4" />
                           <span>{item.roomNumber}</span>
                         </div>
                       </div>
@@ -522,52 +538,52 @@ export const DashboardPage: React.FC = () => {
                   ))}
                 </div>
               )}
-            </div>
+            </section>
           )}
 
           {widgets.showExams && (
-            <div className="bg-white dark:bg-[#111C32] rounded-3xl p-6 border border-slate-200/80 dark:border-slate-800 shadow-xs">
-              <div className="flex items-center justify-between mb-4">
+            <section className="jstu-surface p-6 sm:p-7">
+              <div className="flex items-center justify-between gap-4 pb-4 border-b border-slate-200/80 dark:border-slate-800 mb-5">
                 <div>
-                  <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                    <FileCheck2 className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                  <h2 className="jstu-section-title flex items-center gap-2.5">
+                    <FileCheck2 className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
                     <span>Upcoming Examination Schedule</span>
-                  </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    Stay prepared for upcoming midterms and finals
+                  </h2>
+                  <p className="text-[15px] text-slate-500 dark:text-slate-400 mt-1">
+                    Midterm and final examination dates and venues
                   </p>
                 </div>
                 <Link
                   to="/academic/exams"
-                  className="text-xs font-bold text-purple-600 dark:text-purple-400 hover:underline flex items-center gap-1"
+                  className="text-[15px] font-semibold text-indigo-600 dark:text-indigo-400 hover:underline inline-flex items-center gap-1.5 shrink-0"
                 >
                   <span>All Exams</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {upcomingExams.map((exam) => (
                   <div
                     key={exam.id}
-                    className="p-4 rounded-2xl bg-gradient-to-br from-slate-50 to-purple-50/30 dark:from-slate-900/60 dark:to-purple-950/20 border border-slate-200/70 dark:border-slate-800 space-y-2"
+                    className="jstu-inset p-4 sm:p-5 space-y-2.5"
                   >
-                    <div className="flex items-center justify-between">
-                      <span className="font-mono text-[11px] font-bold text-purple-600 dark:text-purple-400">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-mono text-sm font-semibold text-indigo-600 dark:text-indigo-400">
                         {exam.courseCode}
                       </span>
                       <Badge variant="purple" size="sm">
                         {exam.examType}
                       </Badge>
                     </div>
-                    <h4
-                      className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate"
+                    <h3
+                      className="text-base font-semibold text-slate-900 dark:text-slate-100 line-clamp-2 leading-snug"
                       title={exam.courseName}
                     >
                       {exam.courseName}
-                    </h4>
-                    <div className="pt-1 text-[11px] text-slate-500 dark:text-slate-400 space-y-1">
-                      <p className="font-semibold text-slate-700 dark:text-slate-300">
+                    </h3>
+                    <div className="pt-1 text-sm text-slate-600 dark:text-slate-400 space-y-1 tabular-nums">
+                      <p className="font-semibold text-slate-800 dark:text-slate-200">
                         {new Date(exam.examDate).toLocaleDateString('en-US', {
                           month: 'short',
                           day: 'numeric',
@@ -575,206 +591,204 @@ export const DashboardPage: React.FC = () => {
                         })}
                       </p>
                       <p>
-                        {exam.startTime} &bull; {exam.roomNumber}
+                        {exam.startTime} &middot; {exam.roomNumber}
                       </p>
                     </div>
                   </div>
                 ))}
               </div>
-            </div>
+            </section>
           )}
 
-          {/* V2: Recent Community Posts */}
           {widgets.showCommunity && (
-            <div className="bg-white dark:bg-[#111C32] rounded-3xl p-6 border border-slate-200/80 dark:border-slate-800 shadow-xs">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <section className="jstu-surface p-6 sm:p-7">
+              <div className="flex items-center justify-between gap-4 pb-4 border-b border-slate-200/80 dark:border-slate-800">
+                <h2 className="jstu-section-title flex items-center gap-2.5">
                   <Users className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                   <span>Recent Community Discussions</span>
-                </h3>
+                </h2>
                 <Link
                   to="/community"
-                  className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+                  className="text-[15px] font-semibold text-blue-600 dark:text-blue-400 hover:underline inline-flex items-center gap-1.5 shrink-0"
                 >
                   <span>Explore Feed</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
 
               {recentPosts.length === 0 ? (
-                <p className="text-xs text-slate-400 text-center py-6">
+                <p className="text-[15px] text-slate-500 dark:text-slate-400 text-center py-8">
                   No community posts yet.
                 </p>
               ) : (
-                <div className="space-y-3">
+                <div className="divide-y divide-slate-200/80 dark:divide-slate-800">
                   {recentPosts.map((post) => (
                     <Link
                       key={post.id}
                       to="/community"
-                      className="block p-4 rounded-2xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800 hover:border-blue-300 dark:hover:border-blue-700 transition-all space-y-1.5"
+                      className="block py-4 first:pt-5 last:pb-1 group space-y-1.5"
                     >
-                      <div className="flex items-center justify-between gap-2">
-                        <Badge variant="primary" size="sm">
+                      <div className="flex flex-wrap items-center justify-between gap-2 text-sm text-slate-500 dark:text-slate-400">
+                        <span className="font-semibold text-blue-600 dark:text-blue-400">
                           {post.category}
-                        </Badge>
-                        <span className="text-[11px] text-slate-400">
-                          {post.authorName} &bull; {new Date(post.createdAt).toLocaleDateString()}
+                        </span>
+                        <span className="tabular-nums">
+                          {post.authorName} &middot; {new Date(post.createdAt).toLocaleDateString()}
                         </span>
                       </div>
-                      <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white line-clamp-1">
+                      <h3 className="text-base font-semibold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-1">
                         {post.title}
-                      </h4>
-                      <div className="flex items-center gap-4 text-[11px] text-slate-500">
-                        <span className="inline-flex items-center gap-1">
-                          <Heart className="w-3 h-3 text-rose-500" /> {post.likesCount}
+                      </h3>
+                      <div className="flex items-center gap-5 text-sm text-slate-500 dark:text-slate-400 tabular-nums">
+                        <span className="inline-flex items-center gap-1.5">
+                          <Heart className="w-4 h-4 text-rose-500" /> {post.likesCount}
                         </span>
-                        <span className="inline-flex items-center gap-1">
-                          <MessageCircle className="w-3 h-3 text-blue-500" /> {post.commentsCount}
+                        <span className="inline-flex items-center gap-1.5">
+                          <MessageCircle className="w-4 h-4 text-blue-500" /> {post.commentsCount}
                         </span>
                       </div>
                     </Link>
                   ))}
                 </div>
               )}
-            </div>
+            </section>
           )}
 
-          {/* V2: Marketplace Highlights */}
           {widgets.showMarketplace && (
-            <div className="bg-white dark:bg-[#111C32] rounded-3xl p-6 border border-slate-200/80 dark:border-slate-800 shadow-xs">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                  <ShoppingBag className="w-5 h-5 text-indigo-500" />
+            <section className="jstu-surface p-6 sm:p-7">
+              <div className="flex items-center justify-between gap-4 pb-4 border-b border-slate-200/80 dark:border-slate-800 mb-5">
+                <h2 className="jstu-section-title flex items-center gap-2.5">
+                  <ShoppingBag className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
                   <span>Marketplace Highlights</span>
-                </h3>
+                </h2>
                 <Link
                   to="/marketplace"
-                  className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+                  className="text-[15px] font-semibold text-blue-600 dark:text-blue-400 hover:underline inline-flex items-center gap-1.5 shrink-0"
                 >
                   <span>Browse All</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
 
               {marketplaceHighlights.length === 0 ? (
-                <p className="text-xs text-slate-400 text-center py-6">
+                <p className="text-[15px] text-slate-500 dark:text-slate-400 text-center py-8">
                   No active listings right now.
                 </p>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {marketplaceHighlights.map((item) => (
                     <Link
                       key={item.id}
                       to="/marketplace"
-                      className="rounded-2xl overflow-hidden bg-slate-50 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800 hover:border-indigo-300 transition-all group"
+                      className="rounded-xl overflow-hidden bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors group"
                     >
                       {item.imageUrl && isSafeUrl(item.imageUrl) && (
-                        <div className="h-24 bg-slate-200 dark:bg-slate-800 overflow-hidden">
+                        <div className="aspect-[16/10] bg-slate-200 dark:bg-slate-800 overflow-hidden">
                           <img
                             src={sanitizeUrl(item.imageUrl)}
                             alt={item.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                           />
                         </div>
                       )}
-                      <div className="p-3 space-y-1">
+                      <div className="p-4 space-y-1.5">
                         <div className="flex items-center justify-between gap-2">
-                          <span className="text-xs font-black text-indigo-600 dark:text-indigo-400">
+                          <span className="text-base font-bold text-indigo-600 dark:text-indigo-400 tabular-nums">
                             ${item.price}
                           </span>
-                          <Badge variant="info" size="sm">
+                          <span className="text-[13px] font-medium text-slate-500 dark:text-slate-400">
                             {item.condition}
-                          </Badge>
+                          </span>
                         </div>
-                        <h4 className="text-xs font-bold text-slate-900 dark:text-white line-clamp-1">
+                        <h3 className="text-[15px] font-semibold text-slate-900 dark:text-white line-clamp-1">
                           {item.title}
-                        </h4>
+                        </h3>
                       </div>
                     </Link>
                   ))}
                 </div>
               )}
-            </div>
+            </section>
           )}
         </div>
 
         {/* Right Column */}
-        <div className="space-y-6">
+        <div className="space-y-7">
           {widgets.showNotifications && (
-            <div className="bg-white dark:bg-[#111C32] rounded-3xl p-6 border border-slate-200/80 dark:border-slate-800 shadow-xs">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                  <BellRing className="w-5 h-5 text-blue-600" />
-                  <span>Notification Overview</span>
-                </h3>
+            <section className="jstu-surface p-6">
+              <div className="flex items-center justify-between pb-3.5 border-b border-slate-200/80 dark:border-slate-800">
+                <h2 className="text-lg font-semibold text-slate-950 dark:text-white flex items-center gap-2">
+                  <BellRing className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                  <span>Notifications</span>
+                </h2>
                 <Link
                   to="/notifications"
-                  className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline"
+                  className="text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline"
                 >
                   View all
                 </Link>
               </div>
               {notifications.length === 0 ? (
-                <p className="text-xs text-slate-400 text-center py-4">
+                <p className="text-[15px] text-slate-500 dark:text-slate-400 text-center py-6">
                   All caught up!
                 </p>
               ) : (
-                <div className="space-y-2.5">
+                <div className="divide-y divide-slate-200/80 dark:divide-slate-800">
                   {notifications.slice(0, 4).map((n) => (
                     <Link
                       key={n.id}
                       to={n.link && n.link.startsWith('/') ? n.link : '/notifications'}
-                      className={`block p-3 rounded-xl border transition-colors ${
-                        !n.isRead
-                          ? 'bg-blue-50/50 dark:bg-blue-950/25 border-blue-200/70 dark:border-blue-900/50'
-                          : 'bg-slate-50/70 dark:bg-slate-900/60 border-slate-200/60 dark:border-slate-800'
-                      }`}
+                      className="block py-3.5 first:pt-4 last:pb-1 group"
                     >
-                      <p className="text-xs font-bold text-slate-900 dark:text-white line-clamp-1">
-                        {n.title}
-                      </p>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1 mt-0.5">
-                        {n.message}
-                      </p>
+                      <div className="flex items-start gap-2.5">
+                        {!n.isRead && (
+                          <span className="w-2 h-2 rounded-full bg-blue-600 mt-2 shrink-0" />
+                        )}
+                        <div className="min-w-0">
+                          <p className="text-[15px] font-semibold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 line-clamp-1">
+                            {n.title}
+                          </p>
+                          <p className="text-sm text-slate-600 dark:text-slate-400 line-clamp-1 mt-0.5">
+                            {n.message}
+                          </p>
+                        </div>
+                      </div>
                     </Link>
                   ))}
                 </div>
               )}
-            </div>
+            </section>
           )}
 
           {widgets.showAssignments && (
-            <div className="bg-white dark:bg-[#111C32] rounded-3xl p-6 border border-slate-200/80 dark:border-slate-800 shadow-xs">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <section className="jstu-surface p-6">
+              <div className="flex items-center justify-between pb-3.5 border-b border-slate-200/80 dark:border-slate-800">
+                <h2 className="text-lg font-semibold text-slate-950 dark:text-white flex items-center gap-2">
                   <CheckSquare className="w-5 h-5 text-amber-500" />
                   <span>My Assignments</span>
-                </h3>
+                </h2>
                 <Link
                   to="/academic/assignments"
-                  className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline"
+                  className="text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline"
                 >
                   View all
                 </Link>
               </div>
 
               {assignments.length === 0 ? (
-                <p className="text-xs text-slate-400 text-center py-6">
-                  No assignments recorded yet. Click &quot;New Assignment&quot; to add one!
+                <p className="text-[15px] text-slate-500 dark:text-slate-400 text-center py-6">
+                  No assignments recorded yet. Click &quot;New Assignment&quot; to add one.
                 </p>
               ) : (
-                <div className="space-y-2.5">
+                <div className="divide-y divide-slate-200/80 dark:divide-slate-800">
                   {assignments.slice(0, 4).map((asg) => {
                     const isOverdue = asg.status === 'overdue';
                     const isCompleted = asg.status === 'completed';
 
                     return (
-                      <div
-                        key={asg.id}
-                        className="p-3 rounded-xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800 space-y-1"
-                      >
+                      <div key={asg.id} className="py-3.5 first:pt-4 last:pb-1 space-y-1.5">
                         <div className="flex items-center justify-between gap-2">
-                          <span className="text-xs font-bold text-slate-900 dark:text-slate-100 truncate">
+                          <span className="text-[15px] font-semibold text-slate-900 dark:text-slate-100 truncate">
                             {asg.title}
                           </span>
                           <Badge
@@ -792,102 +806,109 @@ export const DashboardPage: React.FC = () => {
                             {asg.status.replace('_', ' ')}
                           </Badge>
                         </div>
-                        <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
-                          <span>{asg.courseCode}</span>
-                          <span>Due: {new Date(asg.deadline).toLocaleDateString()}</span>
+                        <div className="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400 tabular-nums">
+                          <span className="font-mono">{asg.courseCode}</span>
+                          <span>Due {new Date(asg.deadline).toLocaleDateString()}</span>
                         </div>
                       </div>
                     );
                   })}
                 </div>
               )}
-            </div>
+            </section>
           )}
 
           {widgets.showEvents && (
-            <div className="bg-white dark:bg-[#111C32] rounded-3xl p-6 border border-slate-200/80 dark:border-slate-800 shadow-xs">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                  <CalendarHeart className="w-5 h-5 text-purple-600" />
-                  <span>Upcoming Campus Events</span>
-                </h3>
+            <section className="jstu-surface p-6">
+              <div className="flex items-center justify-between pb-3.5 border-b border-slate-200/80 dark:border-slate-800">
+                <h2 className="text-lg font-semibold text-slate-950 dark:text-white flex items-center gap-2">
+                  <CalendarHeart className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+                  <span>Upcoming Events</span>
+                </h2>
                 <Link
                   to="/events"
-                  className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline"
+                  className="text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline"
                 >
                   All Events
                 </Link>
               </div>
-              <div className="space-y-3">
+              <div className="divide-y divide-slate-200/80 dark:divide-slate-800">
                 {upcomingEvents.map((ev) => (
                   <Link
                     key={ev.id}
                     to="/events"
-                    className="block p-3 rounded-xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800 hover:border-purple-300 transition-colors"
+                    className="block py-3.5 first:pt-4 last:pb-1 group space-y-1"
                   >
-                    <div className="flex items-center justify-between gap-2 mb-1">
-                      <Badge variant="purple" size="sm">
+                    <div className="flex items-center justify-between gap-2 text-sm text-slate-500 dark:text-slate-400">
+                      <span className="font-semibold text-indigo-600 dark:text-indigo-400">
                         {ev.category}
-                      </Badge>
-                      <span className="text-[10px] text-slate-400">
-                        {new Date(ev.date).toLocaleDateString()}
                       </span>
+                      <span className="tabular-nums">{new Date(ev.date).toLocaleDateString()}</span>
                     </div>
-                    <h4 className="text-xs font-bold text-slate-900 dark:text-white line-clamp-1">
+                    <h3 className="text-[15px] font-semibold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 line-clamp-1">
                       {ev.title}
-                    </h4>
-                    <p className="text-[11px] text-slate-500 mt-0.5 truncate">
-                      {ev.location} &bull; {ev.registeredCount}/{ev.capacity} seats
+                    </h3>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 truncate tabular-nums">
+                      {ev.location} &middot; {ev.registeredCount}/{ev.capacity} seats
                     </p>
                   </Link>
                 ))}
               </div>
-            </div>
+            </section>
           )}
 
           {widgets.showNotices && (
-            <div className="bg-white dark:bg-[#111C32] rounded-3xl p-6 border border-slate-200/80 dark:border-slate-800 shadow-xs">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                  <Bell className="w-5 h-5 text-emerald-600" />
-                  <span>Recent University Notices</span>
-                </h3>
+            <section className="jstu-surface p-6">
+              <div className="flex items-center justify-between pb-3.5 border-b border-slate-200/80 dark:border-slate-800">
+                <h2 className="text-lg font-semibold text-slate-950 dark:text-white flex items-center gap-2">
+                  <Bell className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+                  <span>University Notices</span>
+                </h2>
                 <Link
                   to="/notices"
-                  className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline"
+                  className="text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline"
                 >
                   Board
                 </Link>
               </div>
 
-              <div className="space-y-3">
+              <div className="divide-y divide-slate-200/80 dark:divide-slate-800">
                 {notices.map((n) => (
                   <Link
                     key={n.id}
                     to={`/notices/${n.id}`}
-                    className="block p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-900/80 border border-transparent hover:border-slate-200 dark:hover:border-slate-800 transition-all group"
+                    className="block py-3.5 first:pt-4 last:pb-1 group space-y-1"
                   >
-                    <div className="flex items-center gap-2 mb-1">
-                      <Badge variant={n.category === 'Emergency' ? 'danger' : 'info'} size="sm">
+                    <div className="flex items-center gap-2 text-sm">
+                      <span
+                        className={`font-semibold ${
+                          n.category === 'Emergency'
+                            ? 'text-rose-600 dark:text-rose-400'
+                            : 'text-sky-600 dark:text-sky-400'
+                        }`}
+                      >
                         {n.category}
-                      </Badge>
+                      </span>
                       {n.isPinned && (
-                        <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400">
-                          PINNED
-                        </span>
+                        <>
+                          <span className="text-slate-300 dark:text-slate-600">&middot;</span>
+                          <span className="font-semibold text-amber-600 dark:text-amber-400">
+                            Pinned
+                          </span>
+                        </>
                       )}
                     </div>
-                    <h4 className="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-1">
+                    <h3 className="text-[15px] font-semibold text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-1">
                       {n.title}
-                    </h4>
-                    <p className="text-[10px] text-slate-400 mt-1">
-                      {new Date(n.publishedAt).toLocaleDateString()} &bull;{' '}
+                    </h3>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 tabular-nums">
+                      {new Date(n.publishedAt).toLocaleDateString()} &middot;{' '}
                       {n.department || 'Administration'}
                     </p>
                   </Link>
                 ))}
               </div>
-            </div>
+            </section>
           )}
         </div>
       </div>
@@ -898,9 +919,9 @@ export const DashboardPage: React.FC = () => {
         onClose={() => setIsCustomizeOpen(false)}
         title="Customize Student Dashboard"
         description="Choose which campus widgets are displayed on your personal dashboard"
-        maxWidth="sm"
+        maxWidth="md"
       >
-        <div className="space-y-2.5">
+        <div className="space-y-3">
           {[
             { key: 'showClasses', label: "Today's Classes Schedule" },
             { key: 'showExams', label: 'Upcoming Examination Schedule' },
@@ -915,24 +936,24 @@ export const DashboardPage: React.FC = () => {
             return (
               <label
                 key={item.key}
-                className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800 cursor-pointer"
+                className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 cursor-pointer"
               >
-                <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                <span className="text-[15px] font-semibold text-slate-800 dark:text-slate-200">
                   {item.label}
                 </span>
                 <input
                   type="checkbox"
                   checked={widgets[k]}
                   onChange={() => toggleWidget(k)}
-                  className="w-4 h-4 rounded text-blue-600"
+                  className="w-5 h-5 rounded text-blue-600"
                 />
               </label>
             );
           })}
-          <div className="pt-3 flex justify-end">
+          <div className="pt-4 flex justify-end">
             <button
               onClick={() => setIsCustomizeOpen(false)}
-              className="px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-bold"
+              className="jstu-btn-primary"
             >
               Done
             </button>
@@ -947,9 +968,9 @@ export const DashboardPage: React.FC = () => {
         title="Create Academic Assignment"
         description="Add a new assignment deadline to keep track of your coursework"
       >
-        <form onSubmit={handleQuickAddAssignment} className="space-y-4">
+        <form onSubmit={handleQuickAddAssignment} className="space-y-5">
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+            <label className="jstu-label">
               Assignment Title
             </label>
             <input
@@ -958,13 +979,13 @@ export const DashboardPage: React.FC = () => {
               value={newTitle}
               onChange={(e) => setNewTitle(e.target.value)}
               placeholder="e.g. Graph Algorithms Implementation Report"
-              className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="jstu-input"
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+              <label className="jstu-label">
                 Course Code
               </label>
               <input
@@ -972,17 +993,17 @@ export const DashboardPage: React.FC = () => {
                 required
                 value={newCourseCode}
                 onChange={(e) => setNewCourseCode(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="jstu-input font-mono"
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+              <label className="jstu-label">
                 Priority
               </label>
               <select
                 value={newPriority}
                 onChange={(e) => setNewPriority(e.target.value as 'low' | 'medium' | 'high')}
-                className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="jstu-select"
               >
                 <option value="low">Low Priority</option>
                 <option value="medium">Medium Priority</option>
@@ -992,7 +1013,7 @@ export const DashboardPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+            <label className="jstu-label">
               Course Name
             </label>
             <input
@@ -1000,12 +1021,12 @@ export const DashboardPage: React.FC = () => {
               required
               value={newCourseName}
               onChange={(e) => setNewCourseName(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="jstu-input"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+            <label className="jstu-label">
               Submission Deadline
             </label>
             <input
@@ -1013,12 +1034,12 @@ export const DashboardPage: React.FC = () => {
               required
               value={newDeadline}
               onChange={(e) => setNewDeadline(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="jstu-input"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+            <label className="jstu-label">
               Description &amp; Requirements
             </label>
             <textarea
@@ -1026,21 +1047,21 @@ export const DashboardPage: React.FC = () => {
               value={newDescription}
               onChange={(e) => setNewDescription(e.target.value)}
               placeholder="Key deliverables, formatting requirements, file attachments to prepare..."
-              className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="jstu-textarea"
             />
           </div>
 
-          <div className="flex justify-end gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+          <div className="flex justify-end gap-3 pt-3 border-t border-slate-200/80 dark:border-slate-800">
             <button
               type="button"
               onClick={() => setIsAddAssignmentOpen(false)}
-              className="px-4 py-2 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg"
+              className="jstu-btn-secondary"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-lg shadow-xs"
+              className="jstu-btn-primary"
             >
               Save Assignment
             </button>

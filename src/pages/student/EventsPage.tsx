@@ -7,7 +7,6 @@ import {
   Users,
   Search,
   CheckCircle2,
-  AlertCircle,
   XCircle,
   Eye,
 } from 'lucide-react';
@@ -132,24 +131,19 @@ export const EventsPage: React.FC = () => {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 sm:space-y-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
-            <CalendarHeart className="w-6 h-6 text-purple-600 dark:text-purple-400" />
-            <span>Campus Events</span>
-          </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Discover workshops, hackathons, career fairs, and seminars across the university
-          </p>
-        </div>
+      <div className="space-y-1.5">
+        <h1 className="jstu-page-title">Campus Events</h1>
+        <p className="jstu-secondary">
+          Discover workshops, hackathons, career fairs, and seminars across JSTU Campus.
+        </p>
       </div>
 
       {actionError && (
-        <div className="p-3.5 rounded-2xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 text-xs text-rose-700 dark:text-rose-300 flex items-center justify-between">
+        <div className="p-4 rounded-xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 text-sm font-medium text-rose-700 dark:text-rose-300 flex items-center justify-between gap-4">
           <span>{actionError}</span>
-          <button onClick={() => setActionError(null)} className="font-bold">
+          <button onClick={() => setActionError(null)} className="font-semibold hover:underline shrink-0">
             Dismiss
           </button>
         </div>
@@ -159,43 +153,43 @@ export const EventsPage: React.FC = () => {
       <div className="flex border-b border-slate-200 dark:border-slate-800 gap-8">
         <button
           onClick={() => setActiveTab('all')}
-          className={`pb-3 text-sm font-bold relative transition-colors ${
+          className={`pb-3.5 text-[15px] font-semibold relative transition-colors tabular-nums ${
             activeTab === 'all'
-              ? 'text-purple-600 dark:text-purple-400'
-              : 'text-slate-500 dark:text-slate-400'
+              ? 'text-blue-600 dark:text-blue-400'
+              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
           }`}
         >
           <span>Upcoming Events ({events.length})</span>
           {activeTab === 'all' && (
-            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-purple-600 rounded-full" />
+            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 dark:bg-blue-400 rounded-full" />
           )}
         </button>
 
         <button
           onClick={() => setActiveTab('mine')}
-          className={`pb-3 text-sm font-bold relative transition-colors ${
+          className={`pb-3.5 text-[15px] font-semibold relative transition-colors tabular-nums ${
             activeTab === 'mine'
-              ? 'text-purple-600 dark:text-purple-400'
-              : 'text-slate-500 dark:text-slate-400'
+              ? 'text-blue-600 dark:text-blue-400'
+              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
           }`}
         >
           <span>My Registrations ({myActiveEventIds.size})</span>
           {activeTab === 'mine' && (
-            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-purple-600 rounded-full" />
+            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 dark:bg-blue-400 rounded-full" />
           )}
         </button>
       </div>
 
-      {/* Search & Category Pills */}
-      <div className="space-y-3">
+      {/* Search & Category Filters */}
+      <div className="space-y-3.5">
         <div className="relative">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search events by title, organizer, or campus venue..."
-            className="w-full pl-10 pr-4 py-2.5 rounded-2xl text-xs bg-white dark:bg-[#111C32] border border-slate-200/80 dark:border-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-xs"
+            className="jstu-input pl-11"
           />
         </div>
 
@@ -204,10 +198,10 @@ export const EventsPage: React.FC = () => {
             <button
               key={cat}
               onClick={() => setCategoryFilter(cat)}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold shrink-0 border transition-all ${
+              className={`min-h-[38px] px-4 py-2 rounded-xl text-sm font-semibold shrink-0 border transition-colors ${
                 categoryFilter === cat
-                  ? 'bg-purple-600 text-white border-purple-600 shadow-xs'
-                  : 'bg-white dark:bg-[#111C32] text-slate-600 dark:text-slate-300 border-slate-200/80 dark:border-slate-800'
+                  ? 'bg-blue-600 text-white border-blue-600 shadow-xs'
+                  : 'bg-white dark:bg-[#111827] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
               }`}
             >
               {cat}
@@ -233,24 +227,32 @@ export const EventsPage: React.FC = () => {
           }
         />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {filtered.map((ev) => {
             const myReg = getMyRegistration(ev.id);
             const isFull = ev.registeredCount >= ev.capacity;
-            const pct = ev.capacity > 0 ? Math.min(100, Math.round((ev.registeredCount / ev.capacity) * 100)) : 100;
+            const pct =
+              ev.capacity > 0
+                ? Math.min(100, Math.round((ev.registeredCount / ev.capacity) * 100))
+                : 100;
 
             return (
               <div
                 key={ev.id}
-                className="bg-white dark:bg-[#111C32] rounded-3xl overflow-hidden border border-slate-200/80 dark:border-slate-800 shadow-xs hover:border-purple-300 dark:hover:border-purple-700 transition-all flex flex-col justify-between"
+                className="jstu-surface overflow-hidden hover:border-blue-300 dark:hover:border-blue-700 transition-colors flex flex-col justify-between"
               >
-                <div className="relative h-44 bg-gradient-to-br from-purple-700 to-indigo-800 overflow-hidden">
-                  {ev.imageUrl && isSafeUrl(ev.imageUrl) && (
+                <div className="relative h-44 bg-slate-100 dark:bg-slate-900 overflow-hidden border-b border-slate-200/80 dark:border-slate-800">
+                  {ev.imageUrl && isSafeUrl(ev.imageUrl) ? (
                     <img
                       src={sanitizeUrl(ev.imageUrl)}
                       alt={ev.title}
                       className="w-full h-full object-cover"
                     />
+                  ) : (
+                    <div className="w-full h-full flex flex-col items-center justify-center text-slate-400 gap-2">
+                      <CalendarHeart className="w-9 h-9 opacity-40" />
+                      <span className="jstu-meta">{ev.category}</span>
+                    </div>
                   )}
                   <div className="absolute top-3 left-3 flex items-center gap-1.5">
                     <Badge variant="purple" size="sm">
@@ -268,48 +270,48 @@ export const EventsPage: React.FC = () => {
                 </div>
 
                 <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
-                  <div className="space-y-2">
-                    <h3 className="text-base font-extrabold text-slate-900 dark:text-white line-clamp-2 leading-snug">
-                      {ev.title}
-                    </h3>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">
-                      {ev.description}
-                    </p>
+                  <div className="space-y-2.5">
+                    <h3 className="jstu-card-title line-clamp-2">{ev.title}</h3>
+                    <p className="jstu-secondary line-clamp-2">{ev.description}</p>
 
-                    <div className="space-y-1.5 pt-2 text-xs text-slate-600 dark:text-slate-300">
-                      <p className="flex items-center gap-2">
-                        <Calendar className="w-3.5 h-3.5 text-purple-500 shrink-0" />
+                    <div className="space-y-1.5 pt-2 text-sm text-slate-600 dark:text-slate-300">
+                      <p className="flex items-center gap-2 tabular-nums">
+                        <Calendar className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
                         <span>{new Date(ev.date).toLocaleDateString()}</span>
-                        <Clock className="w-3.5 h-3.5 text-purple-500 shrink-0 ml-1" />
+                        <span aria-hidden="true">&middot;</span>
+                        <Clock className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
                         <span>{ev.startTime}</span>
                       </p>
                       <p className="flex items-center gap-2">
-                        <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                        <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
                         <span className="truncate">{ev.location}</span>
                       </p>
-                      <p className="text-[11px] text-slate-400">
-                        Organized by <strong className="text-slate-600 dark:text-slate-300">{ev.organizer}</strong>
+                      <p className="jstu-meta">
+                        Organized by{' '}
+                        <span className="font-semibold text-slate-700 dark:text-slate-200">
+                          {ev.organizer}
+                        </span>
                       </p>
                     </div>
                   </div>
 
                   {/* Capacity Bar */}
-                  <div className="space-y-2 pt-3 border-t border-slate-100 dark:border-slate-800">
-                    <div className="flex items-center justify-between text-[11px]">
-                      <span className="font-semibold text-slate-600 dark:text-slate-300 flex items-center gap-1">
-                        <Users className="w-3.5 h-3.5" />
+                  <div className="space-y-2.5 pt-4 border-t border-slate-200/80 dark:border-slate-800">
+                    <div className="flex items-center justify-between text-sm tabular-nums">
+                      <span className="font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                        <Users className="w-4 h-4 text-slate-400" />
                         {ev.registeredCount} / {ev.capacity} Seats
                       </span>
                       {ev.waitlistCount > 0 && (
-                        <span className="text-amber-600 dark:text-amber-400 font-bold">
+                        <span className="text-amber-700 dark:text-amber-400 font-semibold">
                           {ev.waitlistCount} waitlisted
                         </span>
                       )}
                     </div>
-                    <div className="h-1.5 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                    <div className="h-2 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
                       <div
                         className={`h-full rounded-full ${
-                          isFull ? 'bg-amber-500' : 'bg-purple-600'
+                          isFull ? 'bg-amber-500' : 'bg-blue-600'
                         }`}
                         style={{ width: `${pct}%` }}
                       />
@@ -320,30 +322,31 @@ export const EventsPage: React.FC = () => {
                         <button
                           onClick={() => handleCancel(ev)}
                           disabled={processingId === ev.id}
-                          className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 text-xs font-bold transition-colors"
+                          className="flex-1 inline-flex items-center justify-center gap-2 min-h-[42px] px-4 py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-950/70 text-rose-700 dark:text-rose-300 text-[15px] font-semibold transition-colors"
                         >
-                          <XCircle className="w-3.5 h-3.5" />
+                          <XCircle className="w-4 h-4" />
                           <span>Cancel {myReg.status === 'waitlisted' ? 'Waitlist' : 'Seat'}</span>
                         </button>
                       ) : (
                         <button
                           onClick={() => handleRegister(ev)}
                           disabled={processingId === ev.id}
-                          className={`flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl text-white text-xs font-bold transition-colors ${
+                          className={`flex-1 inline-flex items-center justify-center gap-2 min-h-[42px] px-4 py-2.5 rounded-xl text-white text-[15px] font-semibold transition-colors ${
                             isFull
                               ? 'bg-amber-600 hover:bg-amber-700'
-                              : 'bg-purple-600 hover:bg-purple-700'
+                              : 'bg-blue-600 hover:bg-blue-700'
                           }`}
                         >
-                          <CheckCircle2 className="w-3.5 h-3.5" />
+                          <CheckCircle2 className="w-4 h-4" />
                           <span>{isFull ? 'Join Waitlist' : 'Register Now'}</span>
                         </button>
                       )}
 
                       <button
                         onClick={() => setSelectedEvent(ev)}
-                        className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700"
+                        className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
                         title="View event details"
+                        aria-label="View event details"
                       >
                         <Eye className="w-4 h-4" />
                       </button>
@@ -367,7 +370,7 @@ export const EventsPage: React.FC = () => {
         {selectedEvent && (
           <div className="space-y-4">
             {selectedEvent.imageUrl && isSafeUrl(selectedEvent.imageUrl) && (
-              <div className="h-52 rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-900">
+              <div className="h-52 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
                 <img
                   src={sanitizeUrl(selectedEvent.imageUrl)}
                   alt={selectedEvent.title}
@@ -376,20 +379,20 @@ export const EventsPage: React.FC = () => {
               </div>
             )}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800 text-xs">
-              <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
-                <Calendar className="w-4 h-4 text-purple-500" />
+            <div className="jstu-inset grid grid-cols-1 sm:grid-cols-2 gap-3.5 p-4 text-sm">
+              <div className="flex items-center gap-2.5 text-slate-700 dark:text-slate-200 tabular-nums">
+                <Calendar className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
                 <span>
                   {new Date(selectedEvent.date).toLocaleDateString()} ({selectedEvent.startTime} -{' '}
                   {selectedEvent.endTime})
                 </span>
               </div>
-              <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
-                <MapPin className="w-4 h-4 text-purple-500" />
+              <div className="flex items-center gap-2.5 text-slate-700 dark:text-slate-200">
+                <MapPin className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
                 <span>{selectedEvent.location}</span>
               </div>
-              <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
-                <Users className="w-4 h-4 text-purple-500" />
+              <div className="flex items-center gap-2.5 text-slate-700 dark:text-slate-200 tabular-nums sm:col-span-2">
+                <Users className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
                 <span>
                   {selectedEvent.registeredCount} / {selectedEvent.capacity} seats filled (
                   {selectedEvent.waitlistCount} waitlisted)
@@ -397,28 +400,23 @@ export const EventsPage: React.FC = () => {
               </div>
             </div>
 
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">
-              {selectedEvent.description}
-            </p>
+            <p className="jstu-body whitespace-pre-line">{selectedEvent.description}</p>
 
-            <div className="flex justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
-              <button
-                onClick={() => setSelectedEvent(null)}
-                className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
-              >
+            <div className="flex justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
+              <button onClick={() => setSelectedEvent(null)} className="jstu-btn-secondary">
                 Close
               </button>
               {getMyRegistration(selectedEvent.id) ? (
                 <button
                   onClick={() => handleCancel(selectedEvent)}
-                  className="px-4 py-2 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white"
+                  className="jstu-btn-danger"
                 >
                   Cancel Registration
                 </button>
               ) : (
                 <button
                   onClick={() => handleRegister(selectedEvent)}
-                  className="px-4 py-2 rounded-xl text-xs font-bold bg-purple-600 hover:bg-purple-700 text-white"
+                  className="jstu-btn-primary"
                 >
                   {selectedEvent.registeredCount >= selectedEvent.capacity
                     ? 'Join Waitlist'

@@ -92,33 +92,30 @@ export const GlobalSearchPage: React.FC = () => {
     (activeTab === 'all' || activeTab === key) && results[key].length > 0;
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6">
+    <div className="max-w-5xl mx-auto space-y-7">
       <div>
-        <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
-          <Globe className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+        <h1 className="jstu-page-title flex items-center gap-3">
+          <Globe className="w-7 h-7 text-blue-600 dark:text-blue-400 shrink-0" />
           <span>Campus Global Search</span>
         </h1>
-        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+        <p className="jstu-secondary mt-1.5">
           Search across notices, study resources, community posts, marketplace, books, events, clubs, and student profiles
         </p>
       </div>
 
       {/* Search Form */}
-      <form onSubmit={handleSubmit} className="flex items-center gap-2">
+      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
         <div className="relative flex-1">
-          <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
             value={queryInput}
             onChange={(e) => setQueryInput(e.target.value)}
             placeholder="Try 'Algorithms', 'Calculator', 'Robotics', 'CSE', or a classmate's name..."
-            className="w-full pl-11 pr-4 py-3 rounded-2xl text-xs sm:text-sm bg-white dark:bg-[#111C32] border border-slate-200/80 dark:border-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-xs"
+            className="jstu-input pl-11 min-h-[48px] text-base"
           />
         </div>
-        <button
-          type="submit"
-          className="px-5 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-xs"
-        >
+        <button type="submit" className="jstu-btn-primary min-h-[48px] px-6">
           Search
         </button>
       </form>
@@ -130,10 +127,10 @@ export const GlobalSearchPage: React.FC = () => {
             <button
               key={t.key}
               onClick={() => setActiveTab(t.key)}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold shrink-0 border transition-all ${
+              className={`px-4 py-2 rounded-xl text-sm font-semibold shrink-0 border transition-colors tabular-nums ${
                 activeTab === t.key
                   ? 'bg-blue-600 text-white border-blue-600'
-                  : 'bg-white dark:bg-[#111C32] text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-800'
+                  : 'bg-white dark:bg-[#111827] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-slate-300'
               }`}
             >
               {t.label} ({t.count})
@@ -147,7 +144,7 @@ export const GlobalSearchPage: React.FC = () => {
       ) : !searchParams.get('q') ? (
         <EmptyState
           icon={Search}
-          title="Search across CampusMate"
+          title="Search across JSTU Campus"
           description="Enter a keyword, course code, book title, club name, or student name above."
         />
       ) : totalCount === 0 ? (
@@ -159,20 +156,22 @@ export const GlobalSearchPage: React.FC = () => {
       ) : (
         <div className="space-y-6">
           {showSection('notices') && (
-            <section className="bg-white dark:bg-[#111C32] rounded-3xl p-5 border border-slate-200/80 dark:border-slate-800 space-y-3">
-              <h2 className="text-xs font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-2">
-                <Bell className="w-4 h-4 text-emerald-500" /> Notices ({results.notices.length})
+            <section className="jstu-surface p-6 space-y-3">
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
+                <Bell className="w-4 h-4 text-emerald-600" /> Notices ({results.notices.length})
               </h2>
-              <div className="divide-y divide-slate-100 dark:divide-slate-800">
+              <div className="divide-y divide-slate-200/80 dark:divide-slate-800">
                 {results.notices.map((n) => (
                   <Link
                     key={n.id}
                     to={`/notices/${n.id}`}
-                    className="py-3 flex items-center justify-between gap-3 hover:text-blue-600"
+                    className="py-3.5 flex items-center justify-between gap-3 group"
                   >
                     <div>
-                      <p className="text-xs font-bold text-slate-900 dark:text-white">{n.title}</p>
-                      <p className="text-[11px] text-slate-400">{n.category}</p>
+                      <p className="text-base font-semibold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400">
+                        {n.title}
+                      </p>
+                      <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">{n.category}</p>
                     </div>
                     <ArrowRight className="w-4 h-4 text-slate-400 shrink-0" />
                   </Link>
@@ -182,21 +181,23 @@ export const GlobalSearchPage: React.FC = () => {
           )}
 
           {showSection('resources') && (
-            <section className="bg-white dark:bg-[#111C32] rounded-3xl p-5 border border-slate-200/80 dark:border-slate-800 space-y-3">
-              <h2 className="text-xs font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-2">
-                <BookOpen className="w-4 h-4 text-indigo-500" /> Study Resources ({results.resources.length})
+            <section className="jstu-surface p-6 space-y-3">
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
+                <BookOpen className="w-4 h-4 text-indigo-600" /> Study Resources ({results.resources.length})
               </h2>
-              <div className="divide-y divide-slate-100 dark:divide-slate-800">
+              <div className="divide-y divide-slate-200/80 dark:divide-slate-800">
                 {results.resources.map((r) => (
                   <Link
                     key={r.id}
                     to={`/resources/${r.id}`}
-                    className="py-3 flex items-center justify-between gap-3"
+                    className="py-3.5 flex items-center justify-between gap-3 group"
                   >
                     <div>
-                      <p className="text-xs font-bold text-slate-900 dark:text-white">{r.title}</p>
-                      <p className="text-[11px] text-slate-400">
-                        {r.courseCode} &bull; {r.category}
+                      <p className="text-base font-semibold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400">
+                        {r.title}
+                      </p>
+                      <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+                        {r.courseCode} &middot; {r.category}
                       </p>
                     </div>
                     <ArrowRight className="w-4 h-4 text-slate-400 shrink-0" />
@@ -207,21 +208,23 @@ export const GlobalSearchPage: React.FC = () => {
           )}
 
           {showSection('posts') && (
-            <section className="bg-white dark:bg-[#111C32] rounded-3xl p-5 border border-slate-200/80 dark:border-slate-800 space-y-3">
-              <h2 className="text-xs font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-2">
-                <Users className="w-4 h-4 text-blue-500" /> Community Posts ({results.posts.length})
+            <section className="jstu-surface p-6 space-y-3">
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
+                <Users className="w-4 h-4 text-blue-600" /> Community Posts ({results.posts.length})
               </h2>
-              <div className="divide-y divide-slate-100 dark:divide-slate-800">
+              <div className="divide-y divide-slate-200/80 dark:divide-slate-800">
                 {results.posts.map((p) => (
                   <Link
                     key={p.id}
                     to="/community"
-                    className="py-3 flex items-center justify-between gap-3"
+                    className="py-3.5 flex items-center justify-between gap-3 group"
                   >
                     <div>
-                      <p className="text-xs font-bold text-slate-900 dark:text-white">{p.title}</p>
-                      <p className="text-[11px] text-slate-400">
-                        by {p.authorName} &bull; {p.category}
+                      <p className="text-base font-semibold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400">
+                        {p.title}
+                      </p>
+                      <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+                        by {p.authorName} &middot; {p.category}
                       </p>
                     </div>
                     <ArrowRight className="w-4 h-4 text-slate-400 shrink-0" />
@@ -232,23 +235,23 @@ export const GlobalSearchPage: React.FC = () => {
           )}
 
           {showSection('marketplace') && (
-            <section className="bg-white dark:bg-[#111C32] rounded-3xl p-5 border border-slate-200/80 dark:border-slate-800 space-y-3">
-              <h2 className="text-xs font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-2">
-                <ShoppingBag className="w-4 h-4 text-blue-500" /> Marketplace ({results.marketplace.length})
+            <section className="jstu-surface p-6 space-y-3">
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
+                <ShoppingBag className="w-4 h-4 text-blue-600" /> Marketplace ({results.marketplace.length})
               </h2>
-              <div className="divide-y divide-slate-100 dark:divide-slate-800">
+              <div className="divide-y divide-slate-200/80 dark:divide-slate-800">
                 {results.marketplace.map((m) => (
                   <Link
                     key={m.id}
                     to="/marketplace"
-                    className="py-3 flex items-center justify-between gap-3"
+                    className="py-3.5 flex items-center justify-between gap-3 group"
                   >
                     <div>
-                      <p className="text-xs font-bold text-slate-900 dark:text-white">
-                        {m.title} — ${m.price}
+                      <p className="text-base font-semibold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 tabular-nums">
+                        {m.title} &mdash; ${m.price}
                       </p>
-                      <p className="text-[11px] text-slate-400">
-                        {m.category} &bull; {m.condition} &bull; {m.status}
+                      <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+                        {m.category} &middot; {m.condition} &middot; {m.status}
                       </p>
                     </div>
                     <ArrowRight className="w-4 h-4 text-slate-400 shrink-0" />
@@ -259,23 +262,23 @@ export const GlobalSearchPage: React.FC = () => {
           )}
 
           {showSection('books') && (
-            <section className="bg-white dark:bg-[#111C32] rounded-3xl p-5 border border-slate-200/80 dark:border-slate-800 space-y-3">
-              <h2 className="text-xs font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-2">
-                <BookCopy className="w-4 h-4 text-emerald-500" /> Book Exchange ({results.books.length})
+            <section className="jstu-surface p-6 space-y-3">
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
+                <BookCopy className="w-4 h-4 text-emerald-600" /> Book Exchange ({results.books.length})
               </h2>
-              <div className="divide-y divide-slate-100 dark:divide-slate-800">
+              <div className="divide-y divide-slate-200/80 dark:divide-slate-800">
                 {results.books.map((b) => (
                   <Link
                     key={b.id}
                     to="/books"
-                    className="py-3 flex items-center justify-between gap-3"
+                    className="py-3.5 flex items-center justify-between gap-3 group"
                   >
                     <div>
-                      <p className="text-xs font-bold text-slate-900 dark:text-white">
+                      <p className="text-base font-semibold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400">
                         {b.title} by {b.author}
                       </p>
-                      <p className="text-[11px] text-slate-400">
-                        {b.subjectDepartment} &bull; {b.listingType}
+                      <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+                        {b.subjectDepartment} &middot; {b.listingType}
                       </p>
                     </div>
                     <ArrowRight className="w-4 h-4 text-slate-400 shrink-0" />
@@ -286,21 +289,23 @@ export const GlobalSearchPage: React.FC = () => {
           )}
 
           {showSection('events') && (
-            <section className="bg-white dark:bg-[#111C32] rounded-3xl p-5 border border-slate-200/80 dark:border-slate-800 space-y-3">
-              <h2 className="text-xs font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-2">
-                <CalendarHeart className="w-4 h-4 text-purple-500" /> Campus Events ({results.events.length})
+            <section className="jstu-surface p-6 space-y-3">
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
+                <CalendarHeart className="w-4 h-4 text-purple-600" /> Campus Events ({results.events.length})
               </h2>
-              <div className="divide-y divide-slate-100 dark:divide-slate-800">
+              <div className="divide-y divide-slate-200/80 dark:divide-slate-800">
                 {results.events.map((ev) => (
                   <Link
                     key={ev.id}
                     to="/events"
-                    className="py-3 flex items-center justify-between gap-3"
+                    className="py-3.5 flex items-center justify-between gap-3 group"
                   >
                     <div>
-                      <p className="text-xs font-bold text-slate-900 dark:text-white">{ev.title}</p>
-                      <p className="text-[11px] text-slate-400">
-                        {ev.date} &bull; {ev.location}
+                      <p className="text-base font-semibold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400">
+                        {ev.title}
+                      </p>
+                      <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+                        {ev.date} &middot; {ev.location}
                       </p>
                     </div>
                     <ArrowRight className="w-4 h-4 text-slate-400 shrink-0" />
@@ -311,21 +316,23 @@ export const GlobalSearchPage: React.FC = () => {
           )}
 
           {showSection('clubs') && (
-            <section className="bg-white dark:bg-[#111C32] rounded-3xl p-5 border border-slate-200/80 dark:border-slate-800 space-y-3">
-              <h2 className="text-xs font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-2">
-                <Award className="w-4 h-4 text-indigo-500" /> Student Clubs ({results.clubs.length})
+            <section className="jstu-surface p-6 space-y-3">
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
+                <Award className="w-4 h-4 text-indigo-600" /> Student Clubs ({results.clubs.length})
               </h2>
-              <div className="divide-y divide-slate-100 dark:divide-slate-800">
+              <div className="divide-y divide-slate-200/80 dark:divide-slate-800">
                 {results.clubs.map((c) => (
                   <Link
                     key={c.id}
                     to="/clubs"
-                    className="py-3 flex items-center justify-between gap-3"
+                    className="py-3.5 flex items-center justify-between gap-3 group"
                   >
                     <div>
-                      <p className="text-xs font-bold text-slate-900 dark:text-white">{c.name}</p>
-                      <p className="text-[11px] text-slate-400">
-                        {c.category} &bull; {c.memberCount} members
+                      <p className="text-base font-semibold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400">
+                        {c.name}
+                      </p>
+                      <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5 tabular-nums">
+                        {c.category} &middot; {c.memberCount} members
                       </p>
                     </div>
                     <ArrowRight className="w-4 h-4 text-slate-400 shrink-0" />
@@ -336,21 +343,23 @@ export const GlobalSearchPage: React.FC = () => {
           )}
 
           {showSection('students') && (
-            <section className="bg-white dark:bg-[#111C32] rounded-3xl p-5 border border-slate-200/80 dark:border-slate-800 space-y-3">
-              <h2 className="text-xs font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-2">
-                <UserIcon className="w-4 h-4 text-blue-500" /> Student Profiles ({results.students.length})
+            <section className="jstu-surface p-6 space-y-3">
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
+                <UserIcon className="w-4 h-4 text-blue-600" /> Student Profiles ({results.students.length})
               </h2>
-              <div className="divide-y divide-slate-100 dark:divide-slate-800">
+              <div className="divide-y divide-slate-200/80 dark:divide-slate-800">
                 {results.students.map((s) => (
                   <Link
                     key={s.uid}
                     to={`/students/${s.uid}`}
-                    className="py-3 flex items-center justify-between gap-3"
+                    className="py-3.5 flex items-center justify-between gap-3 group"
                   >
                     <div>
-                      <p className="text-xs font-bold text-slate-900 dark:text-white">{s.fullName}</p>
-                      <p className="text-[11px] text-slate-400">
-                        {s.department} &bull; {s.studentId} &bull; {s.batch}
+                      <p className="text-base font-semibold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400">
+                        {s.fullName}
+                      </p>
+                      <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+                        {s.department} &middot; <span className="font-mono">{s.studentId}</span> &middot; {s.batch}
                       </p>
                     </div>
                     <Badge variant="primary" size="sm">

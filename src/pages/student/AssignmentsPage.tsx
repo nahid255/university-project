@@ -3,15 +3,10 @@ import {
   CheckSquare,
   Plus,
   Search,
-  Filter,
-  Calendar,
   Clock,
   Trash2,
   Edit2,
   CheckCircle2,
-  AlertTriangle,
-  ArrowUpDown,
-  BookOpen,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import {
@@ -32,13 +27,11 @@ export const AssignmentsPage: React.FC = () => {
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Search & Filter
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [priorityFilter, setPriorityFilter] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'deadline' | 'priority' | 'title'>('deadline');
 
-  // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [title, setTitle] = useState('');
@@ -49,7 +42,6 @@ export const AssignmentsPage: React.FC = () => {
   const [priority, setPriority] = useState<AssignmentPriority>('medium');
   const [status, setStatus] = useState<AssignmentStatus>('pending');
 
-  // Delete State
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
 
   const loadAssignments = async () => {
@@ -137,7 +129,6 @@ export const AssignmentsPage: React.FC = () => {
     await loadAssignments();
   };
 
-  // Filter & Sort
   const filtered = assignments.filter((asg) => {
     const matchesSearch =
       asg.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -166,46 +157,43 @@ export const AssignmentsPage: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-7">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
-            <CheckSquare className="w-6 h-6 text-amber-500" />
+          <h1 className="jstu-page-title flex items-center gap-3">
+            <CheckSquare className="w-7 h-7 text-amber-500 shrink-0" />
             <span>Assignment Tracker</span>
           </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Track coursework deliverables, project milestones, and assignment deadlines
+          <p className="jstu-secondary mt-1.5">
+            Track coursework deliverables, project milestones, and submission deadlines
           </p>
         </div>
 
-        <button
-          onClick={openCreateModal}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-2xl text-xs font-bold shadow-md shadow-blue-500/20 transition-all self-start sm:self-auto"
-        >
+        <button onClick={openCreateModal} className="jstu-btn-primary self-start sm:self-auto">
           <Plus className="w-4 h-4" />
           <span>New Assignment</span>
         </button>
       </div>
 
       {/* Filter and Search Controls */}
-      <div className="bg-white dark:bg-[#111C32] rounded-3xl p-4 border border-slate-200/80 dark:border-slate-800 shadow-xs flex flex-col md:flex-row items-center gap-3">
-        <div className="relative flex-1 w-full">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+      <div className="jstu-surface p-4 flex flex-col lg:flex-row items-stretch lg:items-center gap-3">
+        <div className="relative flex-1">
+          <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search assignments by name or course code..."
-            className="w-full pl-10 pr-4 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="jstu-input pl-11"
           />
         </div>
 
-        <div className="flex items-center gap-2 w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 lg:w-auto">
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 font-semibold"
+            className="jstu-select"
           >
             <option value="all">All Statuses</option>
             <option value="pending">Pending</option>
@@ -217,7 +205,7 @@ export const AssignmentsPage: React.FC = () => {
           <select
             value={priorityFilter}
             onChange={(e) => setPriorityFilter(e.target.value)}
-            className="px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 font-semibold"
+            className="jstu-select"
           >
             <option value="all">All Priorities</option>
             <option value="high">High Priority</option>
@@ -228,7 +216,7 @@ export const AssignmentsPage: React.FC = () => {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as 'deadline' | 'priority' | 'title')}
-            className="px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 font-semibold"
+            className="jstu-select"
           >
             <option value="deadline">Sort: Deadline</option>
             <option value="priority">Sort: Priority</option>
@@ -242,14 +230,14 @@ export const AssignmentsPage: React.FC = () => {
         <EmptyState
           icon={CheckSquare}
           title="No assignments found"
-          description="You don't have any assignments matching this criteria. Create one using the button above!"
+          description="You don't have any assignments matching this criteria. Create one using the button above."
           action={{
             label: 'Add Assignment',
             onClick: openCreateModal,
           }}
         />
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-3.5">
           {filtered.map((asg) => {
             const isCompleted = asg.status === 'completed';
             const isOverdue = asg.status === 'overdue';
@@ -258,41 +246,42 @@ export const AssignmentsPage: React.FC = () => {
             return (
               <div
                 key={asg.id}
-                className={`p-5 rounded-3xl bg-white dark:bg-[#111C32] border transition-all shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4 ${
+                className={`jstu-surface p-5 sm:p-6 transition-colors flex flex-col md:flex-row md:items-center justify-between gap-4 ${
                   isCompleted
-                    ? 'border-emerald-200/80 dark:border-emerald-900/40 opacity-80'
+                    ? 'border-emerald-200/80 dark:border-emerald-900/40 opacity-85'
                     : isOverdue
-                    ? 'border-rose-300 dark:border-rose-900/60 bg-rose-50/10'
-                    : 'border-slate-200/80 dark:border-slate-800 hover:border-blue-300 dark:hover:border-blue-700'
+                    ? 'border-rose-300 dark:border-rose-800/70'
+                    : 'hover:border-blue-300 dark:hover:border-blue-700'
                 }`}
               >
-                <div className="flex items-start gap-3.5 flex-1 min-w-0">
+                <div className="flex items-start gap-4 flex-1 min-w-0">
                   <button
                     onClick={() => handleToggleCompleted(asg)}
-                    className={`mt-0.5 w-6 h-6 rounded-lg flex items-center justify-center shrink-0 border transition-all ${
+                    className={`mt-1 w-6 h-6 rounded-lg flex items-center justify-center shrink-0 border transition-colors ${
                       isCompleted
                         ? 'bg-emerald-600 border-emerald-600 text-white'
-                        : 'border-slate-300 dark:border-slate-700 hover:border-emerald-500 text-transparent'
+                        : 'border-slate-300 dark:border-slate-600 hover:border-emerald-500 text-transparent'
                     }`}
                     title={isCompleted ? 'Mark as incomplete' : 'Mark as completed'}
+                    aria-label={isCompleted ? 'Mark assignment incomplete' : 'Mark assignment completed'}
                   >
                     <CheckCircle2 className="w-4 h-4 text-white" />
                   </button>
 
-                  <div className="space-y-1 min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-mono text-xs font-black px-2 py-0.5 rounded bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300">
+                  <div className="space-y-1.5 min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2.5">
+                      <span className="font-mono text-sm font-semibold px-2.5 py-0.5 rounded-md bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200/70 dark:border-blue-800/70">
                         {asg.courseCode}
                       </span>
-                      <h3
-                        className={`text-sm font-bold truncate ${
+                      <h2
+                        className={`text-lg font-semibold truncate ${
                           isCompleted
-                            ? 'line-through text-slate-400 dark:text-slate-400'
-                            : 'text-slate-900 dark:text-white'
+                            ? 'line-through text-slate-400 dark:text-slate-500'
+                            : 'text-slate-950 dark:text-white'
                         }`}
                       >
                         {asg.title}
-                      </h3>
+                      </h2>
                       <Badge
                         variant={
                           asg.priority === 'high'
@@ -303,7 +292,7 @@ export const AssignmentsPage: React.FC = () => {
                         }
                         size="sm"
                       >
-                        {asg.priority.toUpperCase()}
+                        {asg.priority} priority
                       </Badge>
                       <Badge
                         variant={
@@ -321,28 +310,28 @@ export const AssignmentsPage: React.FC = () => {
                       </Badge>
                     </div>
 
-                    <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
+                    <p className="text-[15px] text-slate-600 dark:text-slate-300 line-clamp-2 leading-relaxed">
                       {asg.description}
                     </p>
 
-                    <div className="flex items-center gap-3 text-[11px] text-slate-400 dark:text-slate-400 pt-1">
-                      <span>{asg.courseName}</span>
-                    </div>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">
+                      {asg.courseName}
+                    </p>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between md:justify-end gap-4 border-t md:border-t-0 pt-3 md:pt-0 border-slate-100 dark:border-slate-800">
+                <div className="flex items-center justify-between md:justify-end gap-5 border-t md:border-t-0 pt-3.5 md:pt-0 border-slate-200/80 dark:border-slate-800 shrink-0">
                   <div className="text-left md:text-right space-y-0.5">
                     <div
-                      className={`text-xs font-bold flex items-center md:justify-end gap-1.5 ${
+                      className={`text-[15px] font-semibold flex items-center md:justify-end gap-1.5 tabular-nums ${
                         isOverdue
                           ? 'text-rose-600 dark:text-rose-400'
                           : isCompleted
                           ? 'text-emerald-600 dark:text-emerald-400'
-                          : 'text-slate-700 dark:text-slate-300'
+                          : 'text-slate-800 dark:text-slate-200'
                       }`}
                     >
-                      <Clock className="w-3.5 h-3.5" />
+                      <Clock className="w-4 h-4 shrink-0" />
                       <span>
                         {deadlineDate.toLocaleDateString('en-US', {
                           month: 'short',
@@ -355,23 +344,25 @@ export const AssignmentsPage: React.FC = () => {
                         })}
                       </span>
                     </div>
-                    <span className="text-[10px] text-slate-400 block">
+                    <span className="text-[13px] text-slate-500 dark:text-slate-400 block">
                       {isOverdue ? 'Overdue Deadline' : 'Due date'}
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1.5">
                     <button
                       onClick={() => openEditModal(asg)}
-                      className="p-2 text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                      className="min-w-[40px] min-h-[40px] flex items-center justify-center text-slate-500 hover:text-blue-600 dark:hover:text-blue-400 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                       title="Edit assignment"
+                      aria-label="Edit assignment"
                     >
                       <Edit2 className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => setDeleteTargetId(asg.id)}
-                      className="p-2 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                      className="min-w-[40px] min-h-[40px] flex items-center justify-center text-slate-500 hover:text-rose-600 dark:hover:text-rose-400 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                       title="Delete assignment"
+                      aria-label="Delete assignment"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -383,66 +374,58 @@ export const AssignmentsPage: React.FC = () => {
         </div>
       )}
 
-      {/* Assignment Modal (Create / Edit) */}
+      {/* Assignment Modal */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         title={editingId ? 'Edit Assignment' : 'Add New Assignment'}
         description="Fill in assignment details and deadline"
       >
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-              Assignment Title
-            </label>
+            <label className="jstu-label">Assignment Title</label>
             <input
               type="text"
               required
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Distributed Consensus Paper Review"
-              className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="jstu-input"
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Course Code
-              </label>
+              <label className="jstu-label">Course Code</label>
               <input
                 type="text"
                 required
                 value={courseCode}
                 onChange={(e) => setCourseCode(e.target.value)}
                 placeholder="CSE 301"
-                className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="jstu-input font-mono"
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Course Name
-              </label>
+              <label className="jstu-label">Course Name</label>
               <input
                 type="text"
                 required
                 value={courseName}
                 onChange={(e) => setCourseName(e.target.value)}
                 placeholder="Algorithms & Complexity"
-                className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="jstu-input"
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Priority Level
-              </label>
+              <label className="jstu-label">Priority Level</label>
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value as AssignmentPriority)}
-                className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="jstu-select"
               >
                 <option value="low">Low Priority</option>
                 <option value="medium">Medium Priority</option>
@@ -450,13 +433,11 @@ export const AssignmentsPage: React.FC = () => {
               </select>
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Assignment Status
-              </label>
+              <label className="jstu-label">Assignment Status</label>
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value as AssignmentStatus)}
-                className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="jstu-select"
               >
                 <option value="pending">Pending</option>
                 <option value="in_progress">In Progress</option>
@@ -467,50 +448,42 @@ export const AssignmentsPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-              Deadline Date & Time
-            </label>
+            <label className="jstu-label">Deadline Date &amp; Time</label>
             <input
               type="datetime-local"
               required
               value={deadline}
               onChange={(e) => setDeadline(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="jstu-input"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-              Instructions & Description
-            </label>
+            <label className="jstu-label">Instructions &amp; Description</label>
             <textarea
               rows={3}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Provide assignment objectives, submission link, and notes..."
-              className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="jstu-textarea"
             />
           </div>
 
-          <div className="flex justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+          <div className="flex justify-end gap-3 pt-3 border-t border-slate-200/80 dark:border-slate-800">
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
-              className="px-4 py-2 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg"
+              className="jstu-btn-secondary"
             >
               Cancel
             </button>
-            <button
-              type="submit"
-              className="px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-lg shadow-xs"
-            >
+            <button type="submit" className="jstu-btn-primary">
               {editingId ? 'Update Assignment' : 'Create Assignment'}
             </button>
           </div>
         </form>
       </Modal>
 
-      {/* Confirmation Modal */}
       <ConfirmationModal
         isOpen={Boolean(deleteTargetId)}
         onClose={() => setDeleteTargetId(null)}

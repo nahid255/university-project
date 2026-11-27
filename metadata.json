@@ -1,6 +1,8 @@
 {
-  "name": "CampusMate - University Student Ecosystem",
-  "description": "Your Entire Campus, Connected. Modern university student ecosystem with academics, community, marketplace, book exchange, campus events, clubs, and messaging.",
+  "name": "JSTU Campus - Official University Platform",
+  "description": "Official JSTU Campus portal separating University Administration governance and Student services including academics, transportation, community, marketplace, events, clubs, and My Lab.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }

@@ -2,18 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   BookOpen,
-  Plus,
   Search,
   Download,
   FileText,
-  FileCode,
-  Calendar,
   User,
   Eye,
-  CheckCircle,
   UploadCloud,
-  Layers,
-  ArrowRight,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import {
@@ -45,11 +39,9 @@ export const ResourcesPage: React.FC = () => {
   const [resources, setResources] = useState<StudyResource[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Search & Filter
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
 
-  // Upload Modal State
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -203,22 +195,21 @@ export const ResourcesPage: React.FC = () => {
   });
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
+    <div className="space-y-7">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
-            <BookOpen className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
+          <h1 className="jstu-page-title flex items-center gap-3">
+            <BookOpen className="w-7 h-7 text-indigo-600 dark:text-indigo-400 shrink-0" />
             <span>Study Resource Sharing</span>
           </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Peer-shared lecture notes, past exam solutions, lab manuals, and revision cheat sheets
+          <p className="jstu-secondary mt-1.5">
+            Peer-shared lecture notes, past exam solutions, lab manuals, and revision guides
           </p>
         </div>
 
         <button
           onClick={openUploadModal}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white rounded-2xl text-xs font-bold shadow-md shadow-indigo-500/20 transition-all self-start sm:self-auto"
+          className="jstu-btn-primary bg-indigo-600 hover:bg-indigo-700 self-start sm:self-auto"
         >
           <UploadCloud className="w-4 h-4" />
           <span>Upload Material</span>
@@ -226,15 +217,15 @@ export const ResourcesPage: React.FC = () => {
       </div>
 
       {/* Search and Category Filters */}
-      <div className="space-y-3">
+      <div className="space-y-4">
         <div className="relative">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search study guides, course codes (e.g. CSE 301, MAT 202), or keywords..."
-            className="w-full pl-10 pr-4 py-2.5 rounded-2xl text-xs bg-white dark:bg-[#111C32] border border-slate-200/80 dark:border-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-xs"
+            className="jstu-input pl-11"
           />
         </div>
 
@@ -245,10 +236,10 @@ export const ResourcesPage: React.FC = () => {
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 border ${
+                className={`px-4 py-2 rounded-xl text-sm font-semibold transition-colors shrink-0 border ${
                   isSelected
                     ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
-                    : 'bg-white dark:bg-[#111C32] text-slate-600 dark:text-slate-300 border-slate-200/80 dark:border-slate-800 hover:border-slate-300'
+                    : 'bg-white dark:bg-[#111827] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-slate-300'
                 }`}
               >
                 {cat}
@@ -263,7 +254,7 @@ export const ResourcesPage: React.FC = () => {
         <EmptyState
           icon={BookOpen}
           title="No resources found"
-          description="Be the first student to upload study notes for this subject!"
+          description="Be the first student to upload study notes for this subject."
           action={{
             label: 'Upload Resource',
             onClick: openUploadModal,
@@ -274,11 +265,11 @@ export const ResourcesPage: React.FC = () => {
           {filtered.map((res) => (
             <div
               key={res.id}
-              className="bg-white dark:bg-[#111C32] rounded-3xl p-6 border border-slate-200/80 dark:border-slate-800 shadow-xs hover:border-indigo-300 dark:hover:border-indigo-700 transition-all flex flex-col justify-between"
+              className="jstu-surface p-6 hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors flex flex-col justify-between"
             >
               <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="font-mono text-xs font-black px-2.5 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-mono text-sm font-semibold px-2.5 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200/80 dark:border-indigo-800/70">
                     {res.courseCode}
                   </span>
                   <Badge variant="purple" size="sm">
@@ -288,51 +279,51 @@ export const ResourcesPage: React.FC = () => {
 
                 <div>
                   <Link to={`/resources/${res.id}`} className="block group">
-                    <h3 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-2 leading-snug">
+                    <h2 className="jstu-card-title group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-2">
                       {res.title}
-                    </h3>
+                    </h2>
                   </Link>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 line-clamp-2 leading-relaxed">
+                  <p className="text-[15px] text-slate-600 dark:text-slate-300 mt-2 line-clamp-2 leading-relaxed">
                     {res.description}
                   </p>
                 </div>
 
-                {/* File Attachment Pill */}
-                <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800 flex items-center justify-between text-xs">
+                <div className="p-3.5 jstu-inset flex items-center justify-between gap-2 text-sm">
                   <div className="flex items-center gap-2 min-w-0">
-                    <FileText className="w-4 h-4 text-indigo-600 shrink-0" />
-                    <span className="font-medium text-slate-700 dark:text-slate-300 truncate text-[11px]">
+                    <FileText className="w-4 h-4 text-indigo-600 dark:text-indigo-400 shrink-0" />
+                    <span className="font-medium text-slate-800 dark:text-slate-200 truncate">
                       {res.fileName}
                     </span>
                   </div>
-                  <span className="text-[10px] text-slate-400 shrink-0 ml-2">
+                  <span className="text-[13px] text-slate-500 dark:text-slate-400 shrink-0 tabular-nums">
                     {res.fileSize}
                   </span>
                 </div>
               </div>
 
-              <div className="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800 space-y-3 text-xs">
-                <div className="flex items-center justify-between text-[11px] text-slate-400">
-                  <span className="flex items-center gap-1">
-                    <User className="w-3.5 h-3.5" />
+              <div className="mt-5 pt-4 border-t border-slate-200/80 dark:border-slate-800 space-y-3.5">
+                <div className="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400 tabular-nums">
+                  <span className="flex items-center gap-1.5">
+                    <User className="w-4 h-4" />
                     <span>{res.uploadedByName}</span>
                   </span>
                   <span>{new Date(res.uploadedAt).toLocaleDateString()}</span>
                 </div>
 
-                <div className="flex items-center gap-2 pt-1">
+                <div className="flex items-center gap-2.5">
                   <button
                     onClick={() => handleDownload(res)}
-                    className="flex-1 inline-flex items-center justify-center gap-2 py-2 px-3 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white rounded-xl text-xs font-bold transition-colors shadow-xs"
+                    className="flex-1 jstu-btn-primary bg-indigo-600 hover:bg-indigo-700 tabular-nums"
                   >
-                    <Download className="w-3.5 h-3.5" />
+                    <Download className="w-4 h-4" />
                     <span>Download ({res.downloadsCount})</span>
                   </button>
 
                   <Link
                     to={`/resources/${res.id}`}
-                    className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors"
+                    className="jstu-btn-secondary px-3.5"
                     title="View details"
+                    aria-label="View resource details"
                   >
                     <Eye className="w-4 h-4" />
                   </Link>
@@ -351,36 +342,32 @@ export const ResourcesPage: React.FC = () => {
         description="Contribute verified notes, cheat sheets, or lab code to help classmates"
         maxWidth="lg"
       >
-        <form onSubmit={handleUploadSubmit} className="space-y-4">
+        <form onSubmit={handleUploadSubmit} className="space-y-5">
           {uploadError && (
-            <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-900/60 text-xs text-rose-700 dark:text-rose-300 font-medium">
+            <div className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-900/60 text-sm text-rose-700 dark:text-rose-300 font-medium">
               {uploadError}
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-              Resource Title
-            </label>
+            <label className="jstu-label">Resource Title</label>
             <input
               type="text"
               required
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Operating Systems Concurrency & Deadlocks Exam Notes"
-              className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="jstu-input"
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Category
-              </label>
+              <label className="jstu-label">Category</label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value as ResourceCategory)}
-                className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-semibold"
+                className="jstu-select"
               >
                 {CATEGORIES.filter((c) => c !== 'All').map((cat) => (
                   <option key={cat} value={cat}>
@@ -391,43 +378,38 @@ export const ResourcesPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Course Code
-              </label>
+              <label className="jstu-label">Course Code</label>
               <input
                 type="text"
                 required
                 value={courseCode}
                 onChange={(e) => setCourseCode(e.target.value)}
                 placeholder="CSE 301"
-                className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="jstu-input font-mono"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-              Description & Topics Covered
-            </label>
+            <label className="jstu-label">Description &amp; Topics Covered</label>
             <textarea
               rows={3}
               required
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Briefly describe what chapters, topics, formulas, or practice questions are included in this document..."
-              className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              placeholder="Briefly describe what chapters, topics, formulas, or practice questions are included..."
+              className="jstu-textarea"
             />
           </div>
 
-          {/* Document File Selector */}
-          <div className="space-y-2">
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
-              Select Document File (PDF, DOCX, PPTX - Max 25MB)
+          <div className="space-y-2.5">
+            <label className="jstu-label">
+              Select Document File (PDF, DOCX, PPTX &ndash; Max 25MB)
             </label>
 
-            <div className="flex flex-col sm:flex-row items-center gap-3">
-              <label className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 text-xs font-bold cursor-pointer transition-colors border border-slate-200 dark:border-slate-700">
-                <UploadCloud className="w-4 h-4 text-indigo-600" />
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+              <label className="jstu-btn-secondary cursor-pointer shrink-0">
+                <UploadCloud className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                 <span>{selectedFile ? selectedFile.name : 'Choose File'}</span>
                 <input
                   type="file"
@@ -437,35 +419,35 @@ export const ResourcesPage: React.FC = () => {
                 />
               </label>
 
-              <span className="text-xs text-slate-400">or document URL:</span>
+              <span className="text-sm text-slate-500 dark:text-slate-400 text-center">or URL:</span>
 
               <input
                 type="url"
                 value={fileUrlInput}
                 onChange={(e) => setFileUrlInput(e.target.value)}
                 placeholder="https://example.com/notes.pdf"
-                className="flex-1 w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="jstu-input flex-1"
               />
             </div>
             {selectedFile && (
-              <p className="text-[11px] text-emerald-600 dark:text-emerald-400">
+              <p className="text-sm text-emerald-600 dark:text-emerald-400 font-medium">
                 Ready for upload: {selectedFile.name} ({(selectedFile.size / (1024 * 1024)).toFixed(2)} MB)
               </p>
             )}
           </div>
 
-          <div className="flex justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+          <div className="flex justify-end gap-3 pt-3 border-t border-slate-200/80 dark:border-slate-800">
             <button
               type="button"
               onClick={() => setIsUploadModalOpen(false)}
-              className="px-4 py-2 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg"
+              className="jstu-btn-secondary"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isUploading}
-              className="px-4 py-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-xs disabled:opacity-50"
+              className="jstu-btn-primary bg-indigo-600 hover:bg-indigo-700"
             >
               {isUploading ? 'Uploading Material...' : 'Publish Study Material'}
             </button>

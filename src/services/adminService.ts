@@ -17,6 +17,7 @@ import { getMarketplaceListings, getBookListings } from './marketplaceService';
 import { getEvents, getEventRegistrations } from './eventService';
 import { getClubs } from './clubService';
 import { getReports } from './reportService';
+import { getTransportationRoutes } from './transportationService';
 
 const USERS_STORAGE_KEY = 'campusmate_users_v1';
 const ACTIVITIES_STORAGE_KEY = 'campusmate_activities_v1';
@@ -69,6 +70,7 @@ export const getAdminStats = async (): Promise<AdminStats> => {
     events,
     clubs,
     reports,
+    routes,
   ] = await Promise.all([
     getAllUsers(),
     getNotices(true),
@@ -81,6 +83,7 @@ export const getAdminStats = async (): Promise<AdminStats> => {
     getEvents(true),
     getClubs(),
     getReports(),
+    getTransportationRoutes({ publishedOnly: false }),
   ]);
 
   let totalAssignments = 0;
@@ -118,6 +121,8 @@ export const getAdminStats = async (): Promise<AdminStats> => {
     upcomingEventsCount: events.filter((e) => e.status === 'published' && e.date >= todayStr).length,
     totalClubs: clubs.length,
     pendingReportsCount: reports.filter((r) => r.status === 'pending').length,
+    totalTransportRoutes: routes.length,
+    activeTransportRoutes: routes.filter((r) => r.published && r.status === 'Active').length,
   };
 };
 
@@ -296,8 +301,13 @@ export const getAllUsers = async (): Promise<UserProfile[]> => {
 
 export const updateUserRoleByAdmin = async (
   uid: string,
-  newRole: 'student' | 'admin'
+  newRole: 'student' | 'admin',
+  caller?: UserProfile | null
 ): Promise<void> => {
+  if (!caller || caller.role !== 'admin') {
+    throw new Error('Unauthorized: University Administration clearance is required.');
+  }
+
   if (isFirebaseConfigured() && db) {
     await updateDoc(doc(db, 'users', uid), { role: newRole });
   }

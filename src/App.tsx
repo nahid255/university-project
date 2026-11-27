@@ -14,6 +14,7 @@ import { LoadingSpinner } from './components/common/LoadingSpinner';
 
 // Auth Pages
 import { LoginPage } from './pages/auth/LoginPage';
+import { AdminLoginPage } from './pages/auth/AdminLoginPage';
 import { RegisterPage } from './pages/auth/RegisterPage';
 import { ForgotPasswordPage } from './pages/auth/ForgotPasswordPage';
 
@@ -31,7 +32,7 @@ import { ResourceDetailPage } from './pages/student/ResourceDetailPage';
 import { ProfilePage } from './pages/student/ProfilePage';
 import { SettingsPage } from './pages/student/SettingsPage';
 
-// V2 Student Pages
+// V2 & Transportation Student Pages
 import { CommunityPage } from './pages/student/CommunityPage';
 import { MarketplacePage } from './pages/student/MarketplacePage';
 import { BookExchangePage } from './pages/student/BookExchangePage';
@@ -41,6 +42,9 @@ import { NotificationsPage } from './pages/student/NotificationsPage';
 import { MessagesPage } from './pages/student/MessagesPage';
 import { GlobalSearchPage } from './pages/student/GlobalSearchPage';
 import { StudentPublicProfilePage } from './pages/student/StudentPublicProfilePage';
+import { MyLabDashboardPage } from './pages/student/MyLabDashboardPage';
+import { MyLabExperimentPage } from './pages/student/MyLabExperimentPage';
+import { TransportationPage } from './pages/student/TransportationPage';
 
 // V1 Admin Pages
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
@@ -50,17 +54,18 @@ import { AdminAcademicPage } from './pages/admin/AdminAcademicPage';
 import { AdminLostFoundPage } from './pages/admin/AdminLostFoundPage';
 import { AdminResourcesPage } from './pages/admin/AdminResourcesPage';
 
-// V2 Admin Pages
+// V2 & Transportation Admin Pages
 import { AdminModerationPage } from './pages/admin/AdminModerationPage';
 import { AdminMarketplacePage } from './pages/admin/AdminMarketplacePage';
 import { AdminEventsPage } from './pages/admin/AdminEventsPage';
 import { AdminClubsPage } from './pages/admin/AdminClubsPage';
+import { AdminTransportationPage } from './pages/admin/AdminTransportationPage';
 
 // Not Found
 import { NotFoundPage } from './pages/NotFoundPage';
 
-// Route Guards
-const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+// Strict Student Route Guard
+const StudentRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { currentUser, loading } = useAuth();
   if (loading) {
     return <LoadingSpinner fullPage label="Authenticating student session..." />;
@@ -68,28 +73,32 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
   if (!currentUser) {
     return <Navigate to="/login" replace />;
   }
+  if (currentUser.role === 'admin') {
+    return <Navigate to="/admin" replace />;
+  }
   return <>{children}</>;
 };
 
+// Strict University Administration Route Guard
 const AdminRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { currentUser, loading } = useAuth();
   if (loading) {
-    return <LoadingSpinner fullPage label="Verifying administrator clearance..." />;
+    return <LoadingSpinner fullPage label="Verifying University Administration clearance..." />;
   }
   if (!currentUser) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/admin/login" replace />;
   }
   if (currentUser.role !== 'admin') {
     return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center p-6 text-center">
+      <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center bg-[#F5F8FF] dark:bg-[#080F1F]">
         <div className="w-14 h-14 rounded-2xl bg-rose-100 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 flex items-center justify-center mb-4 ring-8 ring-rose-50 dark:ring-rose-950/20">
           <ShieldAlert className="w-7 h-7" />
         </div>
         <h2 className="text-lg font-bold text-slate-900 dark:text-white">
-          Administrative Clearance Required
+          University Administration Clearance Required
         </h2>
         <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mt-1 mb-6 leading-relaxed">
-          Your current account is registered with student permissions and is not authorized to access the campus administrative control panel.
+          Your account has Student access only and is not authorized to access the JSTU Campus University Administration portal.
         </p>
         <Link
           to="/dashboard"
@@ -106,7 +115,7 @@ const AdminRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 // Root index redirect based on auth status
 const RootRedirect: React.FC = () => {
   const { currentUser, loading } = useAuth();
-  if (loading) return <LoadingSpinner fullPage label="Initializing CampusMate..." />;
+  if (loading) return <LoadingSpinner fullPage label="Initializing JSTU Campus..." />;
   if (!currentUser) return <Navigate to="/login" replace />;
   if (currentUser.role === 'admin') return <Navigate to="/admin" replace />;
   return <Navigate to="/dashboard" replace />;
@@ -118,23 +127,24 @@ export default function App() {
       <AuthProvider>
         <Router>
           <Routes>
-            {/* Public Routes */}
+            {/* Public Portals */}
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/admin/login" element={<AdminLoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
             {/* Root Redirect */}
             <Route path="/" element={<RootRedirect />} />
 
-            {/* Student Protected Portal */}
+            {/* Dedicated Student Portal */}
             <Route
               element={
-                <ProtectedRoute>
+                <StudentRoute>
                   <AppLayout />
-                </ProtectedRoute>
+                </StudentRoute>
               }
             >
-              {/* V1 Student Routes (Preserved) */}
+              {/* V1 Student Routes */}
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/academic/routine" element={<RoutinePage />} />
               <Route path="/academic/exams" element={<ExamsPage />} />
@@ -148,7 +158,7 @@ export default function App() {
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/settings" element={<SettingsPage />} />
 
-              {/* V2 Student Routes */}
+              {/* V2, My Lab & Transportation Student Routes */}
               <Route path="/community" element={<CommunityPage />} />
               <Route path="/marketplace" element={<MarketplacePage />} />
               <Route path="/books" element={<BookExchangePage />} />
@@ -158,90 +168,31 @@ export default function App() {
               <Route path="/messages" element={<MessagesPage />} />
               <Route path="/search" element={<GlobalSearchPage />} />
               <Route path="/students/:uid" element={<StudentPublicProfilePage />} />
+              <Route path="/mylab" element={<MyLabDashboardPage />} />
+              <Route path="/mylab/:experimentId" element={<MyLabExperimentPage />} />
+              <Route path="/transportation" element={<TransportationPage />} />
+            </Route>
 
-              {/* V1 Admin Protected Console (Preserved) */}
-              <Route
-                path="/admin"
-                element={
-                  <AdminRoute>
-                    <AdminDashboardPage />
-                  </AdminRoute>
-                }
-              />
-              <Route
-                path="/admin/students"
-                element={
-                  <AdminRoute>
-                    <AdminStudentsPage />
-                  </AdminRoute>
-                }
-              />
-              <Route
-                path="/admin/notices"
-                element={
-                  <AdminRoute>
-                    <AdminNoticesPage />
-                  </AdminRoute>
-                }
-              />
-              <Route
-                path="/admin/academic"
-                element={
-                  <AdminRoute>
-                    <AdminAcademicPage />
-                  </AdminRoute>
-                }
-              />
-              <Route
-                path="/admin/lost-found"
-                element={
-                  <AdminRoute>
-                    <AdminLostFoundPage />
-                  </AdminRoute>
-                }
-              />
-              <Route
-                path="/admin/resources"
-                element={
-                  <AdminRoute>
-                    <AdminResourcesPage />
-                  </AdminRoute>
-                }
-              />
-
-              {/* V2 Admin Protected Routes */}
-              <Route
-                path="/admin/moderation"
-                element={
-                  <AdminRoute>
-                    <AdminModerationPage />
-                  </AdminRoute>
-                }
-              />
-              <Route
-                path="/admin/marketplace"
-                element={
-                  <AdminRoute>
-                    <AdminMarketplacePage />
-                  </AdminRoute>
-                }
-              />
-              <Route
-                path="/admin/events"
-                element={
-                  <AdminRoute>
-                    <AdminEventsPage />
-                  </AdminRoute>
-                }
-              />
-              <Route
-                path="/admin/clubs"
-                element={
-                  <AdminRoute>
-                    <AdminClubsPage />
-                  </AdminRoute>
-                }
-              />
+            {/* Dedicated University Administration Portal */}
+            <Route
+              element={
+                <AdminRoute>
+                  <AppLayout />
+                </AdminRoute>
+              }
+            >
+              <Route path="/admin" element={<AdminDashboardPage />} />
+              <Route path="/admin/students" element={<AdminStudentsPage />} />
+              <Route path="/admin/transportation" element={<AdminTransportationPage />} />
+              <Route path="/admin/notices" element={<AdminNoticesPage />} />
+              <Route path="/admin/academic" element={<AdminAcademicPage />} />
+              <Route path="/admin/lost-found" element={<AdminLostFoundPage />} />
+              <Route path="/admin/resources" element={<AdminResourcesPage />} />
+              <Route path="/admin/moderation" element={<AdminModerationPage />} />
+              <Route path="/admin/marketplace" element={<AdminMarketplacePage />} />
+              <Route path="/admin/events" element={<AdminEventsPage />} />
+              <Route path="/admin/clubs" element={<AdminClubsPage />} />
+              <Route path="/admin/settings" element={<SettingsPage />} />
             </Route>
 
             {/* 404 Fallback */}

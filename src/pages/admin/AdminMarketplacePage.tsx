@@ -91,170 +91,195 @@ export const AdminMarketplacePage: React.FC = () => {
   );
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
-          <ShoppingBag className="w-6 h-6 text-purple-600" />
-          <span>Marketplace &amp; Book Exchange Moderation</span>
-        </h1>
-        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-          Inspect active listings, update statuses, or remove policy-violating items
+    <div className="space-y-6 sm:space-y-8">
+      <div className="space-y-1.5">
+        <h1 className="jstu-page-title">Marketplace &amp; Book Exchange Moderation</h1>
+        <p className="jstu-secondary">
+          Inspect active listings, update statuses, or remove policy-violating items from student boards.
         </p>
       </div>
 
+      {/* Tabs */}
       <div className="flex border-b border-slate-200 dark:border-slate-800 gap-8">
         <button
           onClick={() => setTab('marketplace')}
-          className={`pb-3 text-sm font-bold relative flex items-center gap-2 ${
-            tab === 'marketplace' ? 'text-purple-600' : 'text-slate-500'
+          className={`pb-3.5 text-[15px] font-semibold relative flex items-center gap-2 whitespace-nowrap shrink-0 transition-colors ${
+            tab === 'marketplace'
+              ? 'text-purple-600 dark:text-purple-400'
+              : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
           }`}
         >
           <ShoppingBag className="w-4 h-4" />
-          <span>Marketplace ({marketplace.length})</span>
+          <span className="tabular-nums">Marketplace ({marketplace.length})</span>
           {tab === 'marketplace' && (
-            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-purple-600 rounded-full" />
+            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-purple-600 dark:bg-purple-400 rounded-full" />
           )}
         </button>
 
         <button
           onClick={() => setTab('books')}
-          className={`pb-3 text-sm font-bold relative flex items-center gap-2 ${
-            tab === 'books' ? 'text-purple-600' : 'text-slate-500'
+          className={`pb-3.5 text-[15px] font-semibold relative flex items-center gap-2 whitespace-nowrap shrink-0 transition-colors ${
+            tab === 'books'
+              ? 'text-purple-600 dark:text-purple-400'
+              : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
           }`}
         >
           <BookCopy className="w-4 h-4" />
-          <span>Book Exchange ({books.length})</span>
+          <span className="tabular-nums">Book Exchange ({books.length})</span>
           {tab === 'books' && (
-            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-purple-600 rounded-full" />
+            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-purple-600 dark:bg-purple-400 rounded-full" />
           )}
         </button>
       </div>
 
-      <div className="relative">
-        <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-        <input
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search listings by title, seller, or category..."
-          className="w-full pl-10 pr-4 py-2.5 rounded-2xl text-xs bg-white dark:bg-[#111C32] border border-slate-200/80 dark:border-slate-800 text-slate-900 dark:text-slate-100"
-        />
+      {/* Search */}
+      <div className="jstu-surface p-4">
+        <div className="relative">
+          <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search listings by title, seller, or category..."
+            className="jstu-input pl-11"
+          />
+        </div>
       </div>
 
       {tab === 'marketplace' ? (
-        <div className="space-y-3">
-          {filteredMkt.map((item) => (
-            <div
-              key={item.id}
-              className="bg-white dark:bg-[#111C32] rounded-2xl p-4 border border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
-            >
-              <div className="space-y-1 min-w-0">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-xs font-black text-blue-600">${item.price}</span>
-                  <Badge variant="info" size="sm">
-                    {item.category}
-                  </Badge>
-                  <Badge
-                    variant={item.status === 'Available' ? 'success' : 'neutral'}
-                    size="sm"
-                  >
-                    {item.status}
-                  </Badge>
-                </div>
-                <h3 className="text-sm font-bold text-slate-900 dark:text-white truncate">
-                  {item.title}
-                </h3>
-                <p className="text-[11px] text-slate-400">
-                  Seller: {item.sellerName} ({item.sellerEmail})
-                </p>
-              </div>
-
-              <div className="flex items-center gap-2 shrink-0">
-                <select
-                  value={item.status}
-                  onChange={async (e) => {
-                    const updated = await updateMarketplaceListing(item.id, {
-                      status: e.target.value as ListingStatus,
-                    });
-                    setMarketplace((prev) =>
-                      prev.map((m) => (m.id === item.id ? updated : m))
-                    );
-                  }}
-                  className="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800"
-                >
-                  <option value="Available">Available</option>
-                  <option value="Reserved">Reserved</option>
-                  <option value="Sold">Sold</option>
-                </select>
-                <button
-                  onClick={() =>
-                    setDeleteTarget({ kind: 'marketplace', id: item.id, title: item.title })
-                  }
-                  className="p-2 rounded-xl text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </div>
+        <div className="space-y-4">
+          {filteredMkt.length === 0 ? (
+            <div className="jstu-surface p-8 text-center jstu-secondary">
+              No marketplace listings matched your search.
             </div>
-          ))}
+          ) : (
+            filteredMkt.map((item) => (
+              <div
+                key={item.id}
+                className="jstu-surface p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+              >
+                <div className="space-y-1.5 min-w-0">
+                  <div className="flex flex-wrap items-center gap-2.5">
+                    <span className="font-mono text-sm font-bold text-blue-600 dark:text-blue-400 tabular-nums">
+                      ${item.price}
+                    </span>
+                    <Badge variant="info" size="sm">
+                      {item.category}
+                    </Badge>
+                    <Badge
+                      variant={item.status === 'Available' ? 'success' : 'neutral'}
+                      size="sm"
+                    >
+                      {item.status}
+                    </Badge>
+                  </div>
+                  <h3 className="jstu-card-title truncate">{item.title}</h3>
+                  <p className="jstu-meta">
+                    Seller: {item.sellerName} ({item.sellerEmail})
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2.5 shrink-0">
+                  <select
+                    value={item.status}
+                    onChange={async (e) => {
+                      const updated = await updateMarketplaceListing(item.id, {
+                        status: e.target.value as ListingStatus,
+                      });
+                      setMarketplace((prev) =>
+                        prev.map((m) => (m.id === item.id ? updated : m))
+                      );
+                    }}
+                    className="jstu-select w-36 min-h-[40px] py-2"
+                    aria-label={`Status for ${item.title}`}
+                  >
+                    <option value="Available">Available</option>
+                    <option value="Reserved">Reserved</option>
+                    <option value="Sold">Sold</option>
+                  </select>
+                  <button
+                    onClick={() =>
+                      setDeleteTarget({ kind: 'marketplace', id: item.id, title: item.title })
+                    }
+                    className="p-2.5 rounded-xl text-rose-600 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-950/40 transition-colors"
+                    title="Delete listing"
+                    aria-label={`Delete ${item.title}`}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       ) : (
-        <div className="space-y-3">
-          {filteredBooks.map((book) => (
-            <div
-              key={book.id}
-              className="bg-white dark:bg-[#111C32] rounded-2xl p-4 border border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
-            >
-              <div className="space-y-1 min-w-0">
-                <div className="flex flex-wrap items-center gap-2">
-                  <Badge variant="purple" size="sm">
-                    {book.listingType === 'Sale' ? `$${book.price}` : 'Exchange'}
-                  </Badge>
-                  <Badge variant="info" size="sm">
-                    {book.subjectDepartment}
-                  </Badge>
-                  <Badge
-                    variant={book.status === 'Available' ? 'success' : 'neutral'}
-                    size="sm"
-                  >
-                    {book.status}
-                  </Badge>
-                </div>
-                <h3 className="text-sm font-bold text-slate-900 dark:text-white truncate">
-                  {book.title} — {book.author}
-                </h3>
-                <p className="text-[11px] text-slate-400">
-                  Owner: {book.sellerName} ({book.sellerEmail})
-                </p>
-              </div>
-
-              <div className="flex items-center gap-2 shrink-0">
-                <select
-                  value={book.status}
-                  onChange={async (e) => {
-                    const updated = await updateBookListing(book.id, {
-                      status: e.target.value as BookListingStatus,
-                    });
-                    setBooks((prev) => prev.map((b) => (b.id === book.id ? updated : b)));
-                  }}
-                  className="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800"
-                >
-                  <option value="Available">Available</option>
-                  <option value="Reserved">Reserved</option>
-                  <option value="Sold">Sold</option>
-                  <option value="Exchanged">Exchanged</option>
-                </select>
-                <button
-                  onClick={() =>
-                    setDeleteTarget({ kind: 'book', id: book.id, title: book.title })
-                  }
-                  className="p-2 rounded-xl text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </div>
+        <div className="space-y-4">
+          {filteredBooks.length === 0 ? (
+            <div className="jstu-surface p-8 text-center jstu-secondary">
+              No book exchange listings matched your search.
             </div>
-          ))}
+          ) : (
+            filteredBooks.map((book) => (
+              <div
+                key={book.id}
+                className="jstu-surface p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+              >
+                <div className="space-y-1.5 min-w-0">
+                  <div className="flex flex-wrap items-center gap-2.5">
+                    <Badge variant="purple" size="sm">
+                      <span className="tabular-nums">
+                        {book.listingType === 'Sale' ? `$${book.price}` : 'Exchange'}
+                      </span>
+                    </Badge>
+                    <Badge variant="info" size="sm">
+                      {book.subjectDepartment}
+                    </Badge>
+                    <Badge
+                      variant={book.status === 'Available' ? 'success' : 'neutral'}
+                      size="sm"
+                    >
+                      {book.status}
+                    </Badge>
+                  </div>
+                  <h3 className="jstu-card-title truncate">
+                    {book.title} &mdash; {book.author}
+                  </h3>
+                  <p className="jstu-meta">
+                    Owner: {book.sellerName} ({book.sellerEmail})
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2.5 shrink-0">
+                  <select
+                    value={book.status}
+                    onChange={async (e) => {
+                      const updated = await updateBookListing(book.id, {
+                        status: e.target.value as BookListingStatus,
+                      });
+                      setBooks((prev) => prev.map((b) => (b.id === book.id ? updated : b)));
+                    }}
+                    className="jstu-select w-36 min-h-[40px] py-2"
+                    aria-label={`Status for ${book.title}`}
+                  >
+                    <option value="Available">Available</option>
+                    <option value="Reserved">Reserved</option>
+                    <option value="Sold">Sold</option>
+                    <option value="Exchanged">Exchanged</option>
+                  </select>
+                  <button
+                    onClick={() =>
+                      setDeleteTarget({ kind: 'book', id: book.id, title: book.title })
+                    }
+                    className="p-2.5 rounded-xl text-rose-600 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-950/40 transition-colors"
+                    title="Delete book listing"
+                    aria-label={`Delete ${book.title}`}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       )}
 

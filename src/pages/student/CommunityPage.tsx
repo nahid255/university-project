@@ -12,7 +12,6 @@ import {
   Camera,
   Send,
   CornerDownRight,
-  Clock,
   ChevronDown,
   ShieldCheck,
 } from 'lucide-react';
@@ -295,22 +294,19 @@ export const CommunityPage: React.FC = () => {
   const topLevelComments = comments.filter((c) => !c.parentCommentId);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 sm:space-y-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
-            <Users className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-            <span>Student Community</span>
-          </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Discuss coursework, ask programming questions, share campus life, and connect with peers
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div className="space-y-1.5">
+          <h1 className="jstu-page-title">Student Community</h1>
+          <p className="jstu-secondary">
+            Discuss coursework, ask programming questions, share campus life, and connect with peers.
           </p>
         </div>
 
         <button
           onClick={openCreateModal}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl text-xs font-bold shadow-md shadow-blue-500/20 transition-all self-start sm:self-auto"
+          className="jstu-btn-primary self-start sm:self-auto shrink-0"
         >
           <Plus className="w-4 h-4" />
           <span>Create Post</span>
@@ -318,9 +314,9 @@ export const CommunityPage: React.FC = () => {
       </div>
 
       {/* Search & Category Filters */}
-      <div className="space-y-3">
+      <div className="space-y-3.5">
         <div className="relative">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={search}
@@ -329,7 +325,7 @@ export const CommunityPage: React.FC = () => {
               setVisibleCount(PAGE_SIZE);
             }}
             placeholder="Search discussions, programming help, or student authors..."
-            className="w-full pl-10 pr-4 py-2.5 rounded-2xl text-xs bg-white dark:bg-[#111C32] border border-slate-200/80 dark:border-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-xs"
+            className="jstu-input pl-11"
           />
         </div>
 
@@ -343,10 +339,10 @@ export const CommunityPage: React.FC = () => {
                   setSelectedCategory(cat);
                   setVisibleCount(PAGE_SIZE);
                 }}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold shrink-0 border transition-all ${
+                className={`min-h-[38px] px-4 py-2 rounded-xl text-sm font-semibold shrink-0 border transition-colors ${
                   active
                     ? 'bg-blue-600 text-white border-blue-600 shadow-xs'
-                    : 'bg-white dark:bg-[#111C32] text-slate-600 dark:text-slate-300 border-slate-200/80 dark:border-slate-800 hover:border-slate-300'
+                    : 'bg-white dark:bg-[#111827] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
                 }`}
               >
                 {cat}
@@ -365,22 +361,19 @@ export const CommunityPage: React.FC = () => {
           action={{ label: 'Write First Post', onClick: openCreateModal }}
         />
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-5">
           {visiblePosts.map((post) => {
             const isLiked = likedPostIds.includes(post.id);
             const isOwner = currentUser?.uid === post.authorId;
             const isAdmin = currentUser?.role === 'admin';
 
             return (
-              <article
-                key={post.id}
-                className="bg-white dark:bg-[#111C32] rounded-3xl p-5 sm:p-6 border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-4"
-              >
+              <article key={post.id} className="jstu-surface p-5 sm:p-6 space-y-4">
                 {/* Author Header */}
                 <div className="flex items-start justify-between gap-3">
                   <Link
                     to={`/students/${post.authorId}`}
-                    className="flex items-center gap-3 group"
+                    className="flex items-center gap-3.5 group min-w-0"
                   >
                     <img
                       src={sanitizeUrl(
@@ -390,38 +383,37 @@ export const CommunityPage: React.FC = () => {
                         )}`
                       )}
                       alt={post.authorName}
-                      className="w-10 h-10 rounded-xl object-cover ring-2 ring-slate-100 dark:ring-slate-800"
+                      className="w-11 h-11 rounded-xl object-cover border border-slate-200 dark:border-slate-700 shrink-0"
                     />
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="text-[15px] font-semibold text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors truncate">
                           {post.authorName}
                         </span>
                         {post.authorRole === 'admin' && (
                           <Badge variant="purple" size="sm">
-                            <ShieldCheck className="w-3 h-3 mr-0.5 inline" />
-                            Admin
+                            <ShieldCheck className="w-3.5 h-3.5" />
+                            <span>Admin</span>
                           </Badge>
                         )}
                       </div>
-                      <p className="text-[11px] text-slate-400 flex items-center gap-1.5">
-                        <span>{post.authorDepartment || 'Campus Member'}</span>
-                        <span>&bull;</span>
-                        <Clock className="w-3 h-3" />
-                        <span>{new Date(post.createdAt).toLocaleDateString()}</span>
+                      <p className="jstu-meta tabular-nums truncate">
+                        {post.authorDepartment || 'Campus Member'} &middot;{' '}
+                        {new Date(post.createdAt).toLocaleDateString()}
                       </p>
                     </div>
                   </Link>
 
-                  <div className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-1.5 shrink-0">
                     <Badge variant="primary" size="sm">
                       {post.category}
                     </Badge>
                     {isOwner && (
                       <button
                         onClick={() => openEditModal(post)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/40 transition-colors"
+                        className="p-2 rounded-lg text-slate-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/40 transition-colors"
                         title="Edit post"
+                        aria-label="Edit post"
                       >
                         <Edit3 className="w-4 h-4" />
                       </button>
@@ -429,8 +421,9 @@ export const CommunityPage: React.FC = () => {
                     {(isOwner || isAdmin) && (
                       <button
                         onClick={() => setPostToDelete(post)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
+                        className="p-2 rounded-lg text-slate-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
                         title="Delete post"
+                        aria-label="Delete post"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -445,8 +438,9 @@ export const CommunityPage: React.FC = () => {
                             ownerId: post.authorId,
                           })
                         }
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/40 transition-colors"
+                        className="p-2 rounded-lg text-slate-500 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/40 transition-colors"
                         title="Report post"
+                        aria-label="Report post"
                       >
                         <Flag className="w-4 h-4" />
                       </button>
@@ -455,15 +449,11 @@ export const CommunityPage: React.FC = () => {
                 </div>
 
                 {/* Body */}
-                <div className="space-y-2.5">
-                  <h2 className="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white leading-snug">
-                    {post.title}
-                  </h2>
-                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">
-                    {post.content}
-                  </p>
+                <div className="space-y-3">
+                  <h2 className="jstu-section-title">{post.title}</h2>
+                  <p className="jstu-body whitespace-pre-line">{post.content}</p>
                   {post.imageUrl && isSafeUrl(post.imageUrl) && (
-                    <div className="rounded-2xl overflow-hidden border border-slate-200/70 dark:border-slate-800 max-h-96 bg-slate-100 dark:bg-slate-900">
+                    <div className="rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 max-h-96 bg-slate-100 dark:bg-slate-900">
                       <img
                         src={sanitizeUrl(post.imageUrl)}
                         alt={post.title}
@@ -474,32 +464,32 @@ export const CommunityPage: React.FC = () => {
                 </div>
 
                 {/* Footer Actions */}
-                <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
+                <div className="pt-4 border-t border-slate-200/80 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex items-center gap-2.5">
                     <button
                       onClick={() => handleToggleLike(post)}
-                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${
+                      className={`inline-flex items-center gap-2 min-h-[38px] px-3.5 py-2 rounded-xl text-sm font-semibold transition-colors tabular-nums ${
                         isLiked
-                          ? 'bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400'
-                          : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                          ? 'bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800'
+                          : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700'
                       }`}
                     >
-                      <Heart className={`w-3.5 h-3.5 ${isLiked ? 'fill-rose-500' : ''}`} />
+                      <Heart className={`w-4 h-4 ${isLiked ? 'fill-rose-500' : ''}`} />
                       <span>{post.likesCount}</span>
                     </button>
 
                     <button
                       onClick={() => handleOpenComments(post)}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-950/40 dark:hover:text-blue-400 transition-colors"
+                      className="inline-flex items-center gap-2 min-h-[38px] px-3.5 py-2 rounded-xl text-sm font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-950/40 dark:hover:text-blue-400 transition-colors tabular-nums"
                     >
-                      <MessageCircle className="w-3.5 h-3.5" />
+                      <MessageCircle className="w-4 h-4" />
                       <span>{post.commentsCount} Comments</span>
                     </button>
                   </div>
 
                   <Link
                     to={`/students/${post.authorId}`}
-                    className="text-[11px] font-semibold text-blue-600 dark:text-blue-400 hover:underline"
+                    className="text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline"
                   >
                     View Author Profile
                   </Link>
@@ -512,7 +502,7 @@ export const CommunityPage: React.FC = () => {
             <div className="text-center pt-2">
               <button
                 onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white dark:bg-[#111C32] border border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-700 dark:text-slate-200 hover:border-blue-400 transition-colors shadow-xs"
+                className="jstu-btn-secondary tabular-nums"
               >
                 <ChevronDown className="w-4 h-4" />
                 <span>Load More Posts ({filtered.length - visibleCount} remaining)</span>
@@ -532,33 +522,29 @@ export const CommunityPage: React.FC = () => {
       >
         <form onSubmit={handlePostSubmit} className="space-y-4">
           {formError && (
-            <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 text-xs text-rose-700 dark:text-rose-300">
+            <div className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 text-sm font-medium text-rose-700 dark:text-rose-300">
               {formError}
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-              Headline
-            </label>
+            <label className="jstu-label">Headline</label>
             <input
               type="text"
               required
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Tips for preparing CSE 301 Dynamic Programming midterm"
-              className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="jstu-input"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-              Category
-            </label>
+            <label className="jstu-label">Category</label>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value as CommunityCategory)}
-              className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 font-semibold"
+              className="jstu-select font-medium"
             >
               {CATEGORIES.filter((c) => c !== 'All').map((cat) => (
                 <option key={cat} value={cat}>
@@ -569,26 +555,22 @@ export const CommunityPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-              Content
-            </label>
+            <label className="jstu-label">Content</label>
             <textarea
               rows={4}
               required
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder="Write your thoughts, code snippets, or campus question..."
-              className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="jstu-textarea"
             />
           </div>
 
           <div className="space-y-2">
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
-              Attach Image (Optional)
-            </label>
-            <div className="flex flex-col sm:flex-row items-center gap-2.5">
-              <label className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 text-xs font-semibold cursor-pointer border border-slate-200 dark:border-slate-700">
-                <Camera className="w-4 h-4 text-blue-600" />
+            <label className="jstu-label">Attach Image (Optional)</label>
+            <div className="flex flex-col sm:flex-row items-center gap-3">
+              <label className="jstu-btn-secondary w-full sm:w-auto cursor-pointer shrink-0">
+                <Camera className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                 <span>{isUploading ? 'Uploading...' : 'Upload Photo'}</span>
                 <input
                   type="file"
@@ -603,28 +585,28 @@ export const CommunityPage: React.FC = () => {
                 value={imageUrl}
                 onChange={(e) => setImageUrl(e.target.value)}
                 placeholder="Or paste https:// image URL"
-                className="flex-1 w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="jstu-input flex-1"
               />
             </div>
             {imageUrl && isSafeUrl(imageUrl) && (
-              <div className="w-24 h-24 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700">
+              <div className="w-28 h-28 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700">
                 <img src={sanitizeUrl(imageUrl)} alt="Preview" className="w-full h-full object-cover" />
               </div>
             )}
           </div>
 
-          <div className="flex justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+          <div className="flex justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
             <button
               type="button"
               onClick={() => setIsComposerOpen(false)}
-              className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+              className="jstu-btn-secondary"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting || isUploading}
-              className="px-5 py-2 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50"
+              className="jstu-btn-primary"
             >
               {isSubmitting ? 'Saving...' : editingPost ? 'Save Changes' : 'Publish Post'}
             </button>
@@ -642,12 +624,12 @@ export const CommunityPage: React.FC = () => {
       >
         {activePost && (
           <div className="space-y-4">
-            <div className="max-h-80 overflow-y-auto space-y-3 pr-1">
+            <div className="max-h-96 overflow-y-auto space-y-3 pr-1">
               {loadingComments ? (
                 <LoadingSpinner label="Loading comments..." />
               ) : topLevelComments.length === 0 ? (
-                <p className="text-xs text-slate-400 text-center py-6">
-                  No comments yet. Be the first to reply!
+                <p className="jstu-secondary text-center py-8">
+                  No comments yet. Be the first to reply.
                 </p>
               ) : (
                 topLevelComments.map((cmt) => {
@@ -656,27 +638,28 @@ export const CommunityPage: React.FC = () => {
                     currentUser?.uid === cmt.authorId || currentUser?.role === 'admin';
 
                   return (
-                    <div key={cmt.id} className="space-y-2">
-                      <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/70 border border-slate-200/70 dark:border-slate-800 space-y-1.5">
+                    <div key={cmt.id} className="space-y-2.5">
+                      <div className="jstu-inset p-4 space-y-2">
                         <div className="flex items-center justify-between gap-2">
                           <Link
                             to={`/students/${cmt.authorId}`}
                             onClick={() => setActivePost(null)}
-                            className="text-xs font-bold text-slate-900 dark:text-white hover:text-blue-600"
+                            className="text-sm font-semibold text-slate-900 dark:text-slate-100 hover:text-blue-600 dark:hover:text-blue-400"
                           >
                             {cmt.authorName}
                           </Link>
-                          <div className="flex items-center gap-2">
-                            <span className="text-[10px] text-slate-400">
+                          <div className="flex items-center gap-2.5">
+                            <span className="jstu-meta tabular-nums">
                               {new Date(cmt.createdAt).toLocaleDateString()}
                             </span>
                             {canDeleteCmt && (
                               <button
                                 onClick={() => handleDeleteComment(cmt.id)}
-                                className="text-slate-400 hover:text-rose-600"
+                                className="p-1 text-slate-400 hover:text-rose-600"
                                 title="Delete comment"
+                                aria-label="Delete comment"
                               >
-                                <Trash2 className="w-3.5 h-3.5" />
+                                <Trash2 className="w-4 h-4" />
                               </button>
                             )}
                             {currentUser?.uid !== cmt.authorId && (
@@ -689,20 +672,19 @@ export const CommunityPage: React.FC = () => {
                                     ownerId: cmt.authorId,
                                   })
                                 }
-                                className="text-slate-400 hover:text-amber-600"
+                                className="p-1 text-slate-400 hover:text-amber-600"
                                 title="Report comment"
+                                aria-label="Report comment"
                               >
-                                <Flag className="w-3.5 h-3.5" />
+                                <Flag className="w-4 h-4" />
                               </button>
                             )}
                           </div>
                         </div>
-                        <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
-                          {cmt.content}
-                        </p>
+                        <p className="jstu-secondary">{cmt.content}</p>
                         <button
                           onClick={() => setReplyTo(cmt)}
-                          className="text-[11px] font-bold text-blue-600 dark:text-blue-400 hover:underline"
+                          className="text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline"
                         >
                           Reply
                         </button>
@@ -716,30 +698,29 @@ export const CommunityPage: React.FC = () => {
                             return (
                               <div
                                 key={rep.id}
-                                className="p-3 rounded-xl bg-blue-50/40 dark:bg-slate-900/40 border border-slate-200/60 dark:border-slate-800 space-y-1"
+                                className="p-3.5 rounded-xl bg-blue-50/50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/70 space-y-1.5"
                               >
                                 <div className="flex items-center justify-between gap-2">
-                                  <span className="inline-flex items-center gap-1 text-xs font-bold text-slate-800 dark:text-slate-100">
-                                    <CornerDownRight className="w-3 h-3 text-blue-500" />
+                                  <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-800 dark:text-slate-100">
+                                    <CornerDownRight className="w-3.5 h-3.5 text-blue-500" />
                                     {rep.authorName}
                                   </span>
                                   <div className="flex items-center gap-2">
-                                    <span className="text-[10px] text-slate-400">
+                                    <span className="jstu-meta tabular-nums">
                                       {new Date(rep.createdAt).toLocaleDateString()}
                                     </span>
                                     {canDeleteRep && (
                                       <button
                                         onClick={() => handleDeleteComment(rep.id)}
-                                        className="text-slate-400 hover:text-rose-600"
+                                        className="p-1 text-slate-400 hover:text-rose-600"
+                                        aria-label="Delete reply"
                                       >
-                                        <Trash2 className="w-3 h-3" />
+                                        <Trash2 className="w-3.5 h-3.5" />
                                       </button>
                                     )}
                                   </div>
                                 </div>
-                                <p className="text-xs text-slate-600 dark:text-slate-300">
-                                  {rep.content}
-                                </p>
+                                <p className="jstu-secondary">{rep.content}</p>
                               </div>
                             );
                           })}
@@ -751,33 +732,36 @@ export const CommunityPage: React.FC = () => {
               )}
             </div>
 
-            <form onSubmit={handleAddComment} className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2">
+            <form
+              onSubmit={handleAddComment}
+              className="pt-4 border-t border-slate-200 dark:border-slate-800 space-y-2.5"
+            >
               {replyTo && (
-                <div className="flex items-center justify-between px-3 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-950/40 text-[11px] text-blue-700 dark:text-blue-300">
+                <div className="flex items-center justify-between px-3.5 py-2 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-sm text-blue-700 dark:text-blue-300">
                   <span>Replying to {replyTo.authorName}</span>
                   <button
                     type="button"
                     onClick={() => setReplyTo(null)}
-                    className="font-bold hover:underline"
+                    className="font-semibold hover:underline"
                   >
                     Cancel
                   </button>
                 </div>
               )}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2.5">
                 <input
                   type="text"
                   value={commentText}
                   onChange={(e) => setCommentText(e.target.value)}
                   placeholder={replyTo ? 'Write your reply...' : 'Add a helpful comment...'}
-                  className="flex-1 px-3.5 py-2.5 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="jstu-input flex-1"
                 />
                 <button
                   type="submit"
                   disabled={!commentText.trim()}
-                  className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold disabled:opacity-50"
+                  className="jstu-btn-primary shrink-0"
                 >
-                  <Send className="w-3.5 h-3.5" />
+                  <Send className="w-4 h-4" />
                   <span>Post</span>
                 </button>
               </div>

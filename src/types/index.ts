@@ -185,6 +185,8 @@ export interface AdminStats {
   upcomingEventsCount?: number;
   totalClubs?: number;
   pendingReportsCount?: number;
+  totalTransportRoutes?: number;
+  activeTransportRoutes?: number;
 }
 
 // ==================== V2.0 DOMAIN TYPES ====================
@@ -475,4 +477,9 @@ export interface ContentReport {
   reviewedAt?: string;
   reviewedBy?: string;
 }
+
+export * from './mylab';
+export * from './transportation';
+
+
 

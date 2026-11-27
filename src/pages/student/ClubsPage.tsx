@@ -5,10 +5,6 @@ import {
   Users,
   ShieldCheck,
   Bell,
-  Calendar,
-  CheckCircle2,
-  Clock,
-  XCircle,
   Edit3,
   Plus,
 } from 'lucide-react';
@@ -27,7 +23,7 @@ import { Badge } from '../../components/common/Badge';
 import { Modal } from '../../components/common/Modal';
 import { EmptyState } from '../../components/common/EmptyState';
 import { LoadingSpinner } from '../../components/common/LoadingSpinner';
-import { isSafeUrl, sanitizeUrl } from '../../utils/url';
+import { sanitizeUrl } from '../../utils/url';
 
 const CATEGORIES: ('All' | ClubCategory)[] = [
   'All',
@@ -186,30 +182,25 @@ export const ClubsPage: React.FC = () => {
       selectedClub!.managerIds.includes(currentUser?.uid || ''));
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 sm:space-y-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
-            <Award className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
-            <span>Student Clubs & Organizations</span>
-          </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Explore verified official campus clubs, read club updates, and apply for membership
-          </p>
-        </div>
+      <div className="space-y-1.5">
+        <h1 className="jstu-page-title">Student Clubs &amp; Organizations</h1>
+        <p className="jstu-secondary">
+          Explore verified official campus clubs, read club updates, and apply for membership.
+        </p>
       </div>
 
       {/* Search & Category Filters */}
-      <div className="space-y-3">
+      <div className="space-y-3.5">
         <div className="relative">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search clubs by name, interests, or activities..."
-            className="w-full pl-10 pr-4 py-2.5 rounded-2xl text-xs bg-white dark:bg-[#111C32] border border-slate-200/80 dark:border-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-xs"
+            className="jstu-input pl-11"
           />
         </div>
 
@@ -218,10 +209,10 @@ export const ClubsPage: React.FC = () => {
             <button
               key={cat}
               onClick={() => setCategoryFilter(cat)}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold shrink-0 border transition-all ${
+              className={`min-h-[38px] px-4 py-2 rounded-xl text-sm font-semibold shrink-0 border transition-colors ${
                 categoryFilter === cat
-                  ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
-                  : 'bg-white dark:bg-[#111C32] text-slate-600 dark:text-slate-300 border-slate-200/80 dark:border-slate-800'
+                  ? 'bg-blue-600 text-white border-blue-600 shadow-xs'
+                  : 'bg-white dark:bg-[#111827] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
               }`}
             >
               {cat}
@@ -238,72 +229,66 @@ export const ClubsPage: React.FC = () => {
           description="No verified campus clubs match your current search."
         />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {filtered.map((club) => {
             const membership = getMembershipForClub(club.id);
 
             return (
               <div
                 key={club.id}
-                className="bg-white dark:bg-[#111C32] rounded-3xl p-6 border border-slate-200/80 dark:border-slate-800 shadow-xs hover:border-indigo-300 dark:hover:border-indigo-700 transition-all flex flex-col justify-between space-y-4"
+                className="jstu-surface p-6 hover:border-blue-300 dark:hover:border-blue-700 transition-colors flex flex-col justify-between space-y-5"
               >
-                <div className="space-y-4">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={sanitizeUrl(
-                          club.logoUrl,
-                          `https://api.dicebear.com/7.x/shapes/svg?seed=${encodeURIComponent(
-                            club.name
-                          )}`
+                <div className="space-y-3.5">
+                  <div className="flex items-start gap-3.5">
+                    <img
+                      src={sanitizeUrl(
+                        club.logoUrl,
+                        `https://api.dicebear.com/7.x/shapes/svg?seed=${encodeURIComponent(
+                          club.name
+                        )}`
+                      )}
+                      alt={club.name}
+                      className="w-12 h-12 rounded-xl object-cover bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shrink-0"
+                    />
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-1.5">
+                        <h3 className="jstu-card-title truncate">{club.name}</h3>
+                        {club.isVerifiedOfficial && (
+                          <span
+                            title="Verified Official University Club"
+                            className="inline-flex shrink-0"
+                          >
+                            <ShieldCheck className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                          </span>
                         )}
-                        alt={club.name}
-                        className="w-12 h-12 rounded-2xl object-cover bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"
-                      />
-                      <div>
-                        <div className="flex items-center gap-1.5">
-                          <h3 className="text-sm font-extrabold text-slate-900 dark:text-white leading-snug">
-                            {club.name}
-                          </h3>
-                          {club.isVerifiedOfficial && (
-                            <span
-                              title="Verified Official University Club"
-                              className="inline-flex shrink-0"
-                            >
-                              <ShieldCheck className="w-4 h-4 text-blue-600" />
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-[11px] text-indigo-600 dark:text-indigo-400 font-semibold">
-                          {club.category}
-                        </p>
                       </div>
+                      <p className="jstu-meta font-medium text-blue-600 dark:text-blue-400">
+                        {club.category}
+                      </p>
                     </div>
                   </div>
 
-                  <p className="text-xs font-semibold text-slate-700 dark:text-slate-200">
+                  <p className="text-[15px] font-semibold text-slate-800 dark:text-slate-100">
                     {club.tagline}
                   </p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-3 leading-relaxed">
-                    {club.description}
-                  </p>
+                  <p className="jstu-secondary line-clamp-3">{club.description}</p>
                 </div>
 
-                <div className="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-3">
-                  <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
-                    <span className="flex items-center gap-1 font-semibold">
-                      <Users className="w-3.5 h-3.5 text-indigo-500" />
+                <div className="pt-4 border-t border-slate-200/80 dark:border-slate-800 space-y-3.5">
+                  <div className="flex items-center justify-between gap-2 text-sm text-slate-600 dark:text-slate-400 tabular-nums">
+                    <span className="flex items-center gap-1.5 font-semibold">
+                      <Users className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                       {club.memberCount} Members
                     </span>
-                    <span>President: {club.presidentName}</span>
+                    <span className="truncate">President: {club.presidentName}</span>
                   </div>
 
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => openClubModal(club)}
-                      className="flex-1 py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition-colors"
+                      className="jstu-btn-primary flex-1"
                     >
-                      View Club & Apply
+                      View Club &amp; Apply
                     </button>
                     {membership && (
                       <Badge
@@ -332,111 +317,101 @@ export const ClubsPage: React.FC = () => {
         isOpen={Boolean(selectedClub)}
         onClose={() => setSelectedClub(null)}
         title={selectedClub?.name || ''}
-        description={selectedClub ? `${selectedClub.category} • Led by ${selectedClub.presidentName}` : ''}
+        description={
+          selectedClub ? `${selectedClub.category} • Led by ${selectedClub.presidentName}` : ''
+        }
         maxWidth="xl"
       >
         {selectedClub && (
           <div className="space-y-6 max-h-[75vh] overflow-y-auto pr-1">
             {/* Club Info */}
             <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   {selectedClub.isVerifiedOfficial && (
                     <Badge variant="primary" size="sm">
                       Verified Official Club
                     </Badge>
                   )}
-                  <Badge variant="neutral" size="sm">
+                  <span className="jstu-meta font-semibold tabular-nums">
                     {selectedClub.memberCount} Active Members
-                  </Badge>
+                  </span>
                 </div>
                 {canManageSelected && (
                   <button
                     onClick={() => setEditingInfo(!editingInfo)}
-                    className="inline-flex items-center gap-1 text-xs font-bold text-indigo-600 hover:underline"
+                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline"
                   >
-                    <Edit3 className="w-3.5 h-3.5" />
+                    <Edit3 className="w-4 h-4" />
                     <span>{editingInfo ? 'Cancel Edit' : 'Edit Club Info'}</span>
                   </button>
                 )}
               </div>
 
               {editingInfo ? (
-                <form onSubmit={handleSaveClubInfo} className="space-y-3 p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800">
+                <form
+                  onSubmit={handleSaveClubInfo}
+                  className="jstu-inset p-4 space-y-3"
+                >
                   <input
                     type="text"
                     value={editTagline}
                     onChange={(e) => setEditTagline(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700"
+                    className="jstu-input"
                   />
                   <textarea
                     rows={3}
                     value={editDesc}
                     onChange={(e) => setEditDesc(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700"
+                    className="jstu-textarea"
                   />
-                  <button
-                    type="submit"
-                    className="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold"
-                  >
+                  <button type="submit" className="jstu-btn-primary">
                     Save Club Details
                   </button>
                 </form>
               ) : (
                 <>
-                  <p className="text-xs font-bold text-indigo-600 dark:text-indigo-400">
+                  <p className="text-[15px] font-semibold text-blue-600 dark:text-blue-400">
                     {selectedClub.tagline}
                   </p>
-                  <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                    {selectedClub.description}
-                  </p>
+                  <p className="jstu-body">{selectedClub.description}</p>
                 </>
               )}
 
               {selectedClub.activities.length > 0 && (
-                <div className="space-y-1.5">
-                  <h4 className="text-xs font-bold text-slate-800 dark:text-slate-200">
-                    Weekly Activities & Programs
+                <div className="space-y-2 pt-1">
+                  <h4 className="text-sm font-semibold text-slate-800 dark:text-slate-200">
+                    Weekly Activities &amp; Programs
                   </h4>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedClub.activities.map((act, idx) => (
-                      <span
-                        key={idx}
-                        className="px-3 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-[11px] font-medium text-slate-700 dark:text-slate-300"
-                      >
-                        {act}
-                      </span>
-                    ))}
-                  </div>
+                  <p className="jstu-secondary">
+                    {selectedClub.activities.join(' · ')}
+                  </p>
                 </div>
               )}
             </div>
 
             {/* Club Announcements */}
-            <div className="space-y-3 pt-4 border-t border-slate-100 dark:border-slate-800">
-              <h4 className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-                <Bell className="w-4 h-4 text-indigo-500" />
+            <div className="space-y-3 pt-5 border-t border-slate-200 dark:border-slate-800">
+              <h4 className="jstu-card-title flex items-center gap-2">
+                <Bell className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                 <span>Club Announcements ({selectedClub.announcements.length})</span>
               </h4>
 
               {selectedClub.announcements.length === 0 ? (
-                <p className="text-xs text-slate-400">No club announcements posted yet.</p>
+                <p className="jstu-secondary">No club announcements posted yet.</p>
               ) : (
-                <div className="space-y-2">
+                <div className="space-y-2.5">
                   {selectedClub.announcements.map((ann) => (
-                    <div
-                      key={ann.id}
-                      className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800 space-y-1"
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-slate-900 dark:text-white">
+                    <div key={ann.id} className="jstu-inset p-4 space-y-1.5">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-[15px] font-semibold text-slate-900 dark:text-slate-100">
                           {ann.title}
                         </span>
-                        <span className="text-[10px] text-slate-400">
+                        <span className="jstu-meta tabular-nums shrink-0">
                           {new Date(ann.createdAt).toLocaleDateString()}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-600 dark:text-slate-300">{ann.content}</p>
+                      <p className="jstu-secondary">{ann.content}</p>
                     </div>
                   ))}
                 </div>
@@ -445,9 +420,9 @@ export const ClubsPage: React.FC = () => {
               {canManageSelected && (
                 <form
                   onSubmit={handlePublishAnnouncement}
-                  className="p-3.5 rounded-2xl bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-200/60 dark:border-indigo-900/50 space-y-2"
+                  className="p-4 rounded-xl bg-blue-50/60 dark:bg-blue-950/20 border border-blue-200/70 dark:border-blue-900/50 space-y-3"
                 >
-                  <p className="text-[11px] font-bold text-indigo-800 dark:text-indigo-300">
+                  <p className="text-sm font-semibold text-blue-800 dark:text-blue-300">
                     Publish Club Announcement
                   </p>
                   <input
@@ -456,7 +431,7 @@ export const ClubsPage: React.FC = () => {
                     value={annTitle}
                     onChange={(e) => setAnnTitle(e.target.value)}
                     placeholder="Announcement title..."
-                    className="w-full px-3 py-1.5 rounded-xl text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700"
+                    className="jstu-input"
                   />
                   <textarea
                     rows={2}
@@ -464,13 +439,10 @@ export const ClubsPage: React.FC = () => {
                     value={annContent}
                     onChange={(e) => setAnnContent(e.target.value)}
                     placeholder="Share meeting schedule, competition registration, or workshop update..."
-                    className="w-full px-3 py-1.5 rounded-xl text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700"
+                    className="jstu-textarea"
                   />
-                  <button
-                    type="submit"
-                    className="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-xl bg-indigo-600 text-white text-xs font-bold"
-                  >
-                    <Plus className="w-3.5 h-3.5" />
+                  <button type="submit" className="jstu-btn-primary">
+                    <Plus className="w-4 h-4" />
                     <span>Post Update</span>
                   </button>
                 </form>
@@ -478,20 +450,18 @@ export const ClubsPage: React.FC = () => {
             </div>
 
             {/* Membership Status / Request Form */}
-            <div className="space-y-3 pt-4 border-t border-slate-100 dark:border-slate-800">
-              <h4 className="text-xs font-bold text-slate-900 dark:text-white">
-                Membership Status
-              </h4>
+            <div className="space-y-3 pt-5 border-t border-slate-200 dark:border-slate-800">
+              <h4 className="jstu-card-title">Membership Status</h4>
               {(() => {
                 const myMem = getMembershipForClub(selectedClub.id);
                 if (myMem) {
                   return (
-                    <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800 flex items-center justify-between">
+                    <div className="jstu-inset p-4 flex items-center justify-between gap-3">
                       <div className="space-y-0.5">
-                        <p className="text-xs font-bold text-slate-800 dark:text-slate-100">
+                        <p className="text-[15px] font-semibold text-slate-900 dark:text-slate-100">
                           Application Status: <span className="capitalize">{myMem.status}</span>
                         </p>
-                        <p className="text-[11px] text-slate-500">
+                        <p className="jstu-meta tabular-nums">
                           Requested on {new Date(myMem.requestedAt).toLocaleDateString()}
                         </p>
                       </div>
@@ -514,20 +484,22 @@ export const ClubsPage: React.FC = () => {
                 return (
                   <form onSubmit={handleRequestMembership} className="space-y-3">
                     {joinError && (
-                      <p className="text-xs text-rose-600 dark:text-rose-400">{joinError}</p>
+                      <p className="text-sm font-medium text-rose-600 dark:text-rose-400">
+                        {joinError}
+                      </p>
                     )}
                     <textarea
-                      rows={2}
+                      rows={3}
                       required
                       value={joinReason}
                       onChange={(e) => setJoinReason(e.target.value)}
                       placeholder="Briefly describe your interest, skills, or why you'd like to join..."
-                      className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100"
+                      className="jstu-textarea"
                     />
                     <button
                       type="submit"
                       disabled={submittingJoin}
-                      className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold disabled:opacity-50"
+                      className="jstu-btn-primary"
                     >
                       {submittingJoin ? 'Submitting...' : 'Request Membership'}
                     </button>
@@ -538,38 +510,38 @@ export const ClubsPage: React.FC = () => {
 
             {/* Manager Membership Requests Queue */}
             {canManageSelected && (
-              <div className="space-y-3 pt-4 border-t border-slate-100 dark:border-slate-800">
-                <h4 className="text-xs font-bold text-slate-900 dark:text-white">
+              <div className="space-y-3 pt-5 border-t border-slate-200 dark:border-slate-800">
+                <h4 className="jstu-card-title tabular-nums">
                   Membership Applications ({clubRequests.length})
                 </h4>
                 {clubRequests.length === 0 ? (
-                  <p className="text-xs text-slate-400">No applications yet.</p>
+                  <p className="jstu-secondary">No applications yet.</p>
                 ) : (
-                  <div className="space-y-2">
+                  <div className="space-y-2.5">
                     {clubRequests.map((req) => (
                       <div
                         key={req.id}
-                        className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2"
+                        className="jstu-inset p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
                       >
-                        <div className="space-y-0.5">
-                          <p className="text-xs font-bold text-slate-900 dark:text-white">
+                        <div className="space-y-1">
+                          <p className="text-[15px] font-semibold text-slate-900 dark:text-slate-100">
                             {req.userName} ({req.studentId})
                           </p>
-                          <p className="text-[11px] text-slate-500">{req.department}</p>
-                          <p className="text-xs text-slate-600 dark:text-slate-300">{req.reason}</p>
+                          <p className="jstu-meta">{req.department}</p>
+                          <p className="jstu-secondary">{req.reason}</p>
                         </div>
                         <div className="flex items-center gap-2 shrink-0">
                           {req.status === 'pending' ? (
                             <>
                               <button
                                 onClick={() => handleReviewMembership(req, 'rejected')}
-                                className="px-3 py-1.5 rounded-lg text-xs font-bold text-rose-600 hover:bg-rose-50"
+                                className="jstu-btn-secondary text-rose-600 dark:text-rose-400"
                               >
                                 Reject
                               </button>
                               <button
                                 onClick={() => handleReviewMembership(req, 'approved')}
-                                className="px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 text-white"
+                                className="inline-flex items-center justify-center gap-1.5 min-h-[42px] px-4 py-2 rounded-xl text-[15px] font-semibold bg-emerald-600 hover:bg-emerald-700 text-white"
                               >
                                 Approve
                               </button>

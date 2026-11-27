@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import {
   ArrowLeft,
-  Bell,
   Calendar,
   Building,
   User,
   Download,
   FileText,
   Pin,
-  Share2,
 } from 'lucide-react';
 import { getNoticeById } from '../../services/noticeService';
 import { Notice } from '../../types';
@@ -19,7 +17,6 @@ import { sanitizeUrl } from '../../utils/url';
 
 export const NoticeDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   const [notice, setNotice] = useState<Notice | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -45,17 +42,12 @@ export const NoticeDetailPage: React.FC = () => {
 
   if (!notice) {
     return (
-      <div className="text-center py-12 space-y-4">
-        <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">
-          Notice Not Found
-        </h2>
-        <p className="text-xs text-slate-500">
+      <div className="text-center py-14 space-y-4">
+        <h2 className="jstu-section-title">Notice Not Found</h2>
+        <p className="jstu-secondary">
           The requested university announcement may have been moved, updated, or removed.
         </p>
-        <Link
-          to="/notices"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold"
-        >
+        <Link to="/notices" className="jstu-btn-primary">
           <ArrowLeft className="w-4 h-4" />
           <span>Return to Notice Board</span>
         </Link>
@@ -65,26 +57,23 @@ export const NoticeDetailPage: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      {/* Back button */}
       <div>
         <Link
           to="/notices"
-          className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400 transition-colors"
+          className="inline-flex items-center gap-2 text-[15px] font-semibold text-slate-600 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Notice Board</span>
         </Link>
       </div>
 
-      {/* Main Notice Article */}
-      <article className="bg-white dark:bg-[#111C32] rounded-3xl p-6 sm:p-10 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-6">
-        {/* Header Tags & Title */}
-        <div className="space-y-3 pb-6 border-b border-slate-100 dark:border-slate-800">
+      <article className="jstu-surface p-6 sm:p-10 space-y-7">
+        <div className="space-y-4 pb-6 border-b border-slate-200/80 dark:border-slate-800">
           <div className="flex flex-wrap items-center gap-2.5">
             {notice.isPinned && (
-              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider bg-amber-100 text-amber-800 dark:bg-amber-950/80 dark:text-amber-300 border border-amber-300 dark:border-amber-700">
-                <Pin className="w-3 h-3 fill-amber-600" />
-                PINNED NOTICE
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-[13px] font-semibold bg-amber-100 text-amber-800 dark:bg-amber-950/80 dark:text-amber-300 border border-amber-300 dark:border-amber-700">
+                <Pin className="w-3.5 h-3.5 fill-amber-600" />
+                Pinned Notice
               </span>
             )}
             <Badge variant="primary" size="md">
@@ -92,13 +81,13 @@ export const NoticeDetailPage: React.FC = () => {
             </Badge>
           </div>
 
-          <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900 dark:text-white leading-tight">
+          <h1 className="jstu-page-title">
             {notice.title}
           </h1>
 
-          <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500 dark:text-slate-400 pt-2">
-            <span className="flex items-center gap-1.5">
-              <Calendar className="w-3.5 h-3.5 text-slate-400" />
+          <div className="flex flex-wrap items-center gap-5 text-[15px] text-slate-600 dark:text-slate-400 pt-1">
+            <span className="flex items-center gap-2 tabular-nums">
+              <Calendar className="w-4 h-4 text-slate-400" />
               <span>
                 Published on{' '}
                 {new Date(notice.publishedAt).toLocaleDateString('en-US', {
@@ -110,39 +99,37 @@ export const NoticeDetailPage: React.FC = () => {
             </span>
 
             {notice.department && (
-              <span className="flex items-center gap-1.5">
-                <Building className="w-3.5 h-3.5 text-slate-400" />
+              <span className="flex items-center gap-2">
+                <Building className="w-4 h-4 text-slate-400" />
                 <span>{notice.department}</span>
               </span>
             )}
 
-            <span className="flex items-center gap-1.5 font-medium text-slate-700 dark:text-slate-300">
-              <User className="w-3.5 h-3.5 text-slate-400" />
+            <span className="flex items-center gap-2 font-medium text-slate-800 dark:text-slate-200">
+              <User className="w-4 h-4 text-slate-400" />
               <span>Issued by {notice.authorName}</span>
             </span>
           </div>
         </div>
 
-        {/* Content Body */}
-        <div className="prose dark:prose-invert max-w-none text-sm text-slate-700 dark:text-slate-200 leading-relaxed space-y-4">
-          <p className="whitespace-pre-line text-sm sm:text-base leading-relaxed">
+        <div className="text-base text-slate-700 dark:text-slate-200 leading-[1.75] space-y-4">
+          <p className="whitespace-pre-line">
             {notice.content}
           </p>
         </div>
 
-        {/* Attachment Card */}
         {notice.attachmentName && (
-          <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-950/80 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+          <div className="p-5 jstu-inset flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3.5">
+              <div className="w-11 h-11 rounded-xl bg-blue-100 dark:bg-blue-950/80 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
                 <FileText className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                <p className="text-[15px] font-semibold text-slate-900 dark:text-slate-100">
                   {notice.attachmentName}
                 </p>
-                <p className="text-[11px] text-slate-400">
-                  Official Document &bull; Verified PDF
+                <p className="text-sm text-slate-500 dark:text-slate-400">
+                  Official Document &middot; Verified PDF
                 </p>
               </div>
             </div>
@@ -152,9 +139,9 @@ export const NoticeDetailPage: React.FC = () => {
               download={notice.attachmentName}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition-colors shadow-xs"
+              className="jstu-btn-primary"
             >
-              <Download className="w-3.5 h-3.5" />
+              <Download className="w-4 h-4" />
               <span>Download Circular</span>
             </a>
           </div>

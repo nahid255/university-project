@@ -100,19 +100,40 @@ export const registerUser = async (params: RegisterParams): Promise<UserProfile>
   return newProfile;
 };
 
-export const loginUser = async (email: string, password: string): Promise<UserProfile> => {
+export const loginUser = async (
+  email: string,
+  password: string,
+  expectedPortal?: 'student' | 'admin'
+): Promise<UserProfile> => {
   const normalizedEmail = email.trim().toLowerCase();
   if (!normalizedEmail) throw new Error('Please enter your email.');
   if (!password) throw new Error('Please enter your password.');
+
+  let profile: UserProfile;
 
   // Real Firebase Auth
   if (isFirebaseConfigured() && auth && db) {
     const cred = await signInWithEmailAndPassword(auth, normalizedEmail, password);
     const snap = await getDoc(doc(db, 'users', cred.user.uid));
     if (!snap.exists()) {
+      await signOut(auth);
       throw new Error('User profile record not found in database.');
     }
-    const profile = snap.data() as UserProfile;
+    profile = snap.data() as UserProfile;
+
+    if (expectedPortal === 'admin' && profile.role !== 'admin') {
+      await signOut(auth);
+      throw new Error(
+        'Access denied: This account does not have University Administration clearance. Please sign in through the Student Portal.'
+      );
+    }
+    if (expectedPortal === 'student' && profile.role === 'admin') {
+      await signOut(auth);
+      throw new Error(
+        'University Administration accounts must sign in through the Administration Portal.'
+      );
+    }
+
     localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(profile));
     return profile;
   }
@@ -125,7 +146,17 @@ export const loginUser = async (email: string, password: string): Promise<UserPr
     throw new Error('Invalid email or password. Please check your credentials or register a new account.');
   }
 
-  // Demo accounts accept password123 or any password for seamless preview testing
+  if (expectedPortal === 'admin' && foundUser.role !== 'admin') {
+    throw new Error(
+      'Access denied: This account does not have University Administration clearance. Please sign in through the Student Portal.'
+    );
+  }
+  if (expectedPortal === 'student' && foundUser.role === 'admin') {
+    throw new Error(
+      'University Administration accounts must sign in through the Administration Portal.'
+    );
+  }
+
   localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(foundUser));
   return foundUser;
 };
@@ -172,10 +203,19 @@ export const getCurrentUserProfile = (): UserProfile | null => {
 
 export const updateUserProfile = async (
   uid: string,
-  updates: Partial<Omit<UserProfile, 'uid' | 'email' | 'role'>>
+  updates: Partial<Omit<UserProfile, 'uid' | 'email' | 'role' | 'studentId'>>
 ): Promise<UserProfile> => {
+  // Explicitly whitelist editable profile fields to block client-side privilege escalation
+  const safeUpdates: Partial<UserProfile> = {};
+  if (typeof updates.fullName === 'string') safeUpdates.fullName = updates.fullName;
+  if (typeof updates.phone === 'string') safeUpdates.phone = updates.phone;
+  if (typeof updates.bio === 'string') safeUpdates.bio = updates.bio;
+  if (typeof updates.avatarUrl === 'string') safeUpdates.avatarUrl = updates.avatarUrl;
+  if (typeof updates.department === 'string') safeUpdates.department = updates.department;
+  if (typeof updates.batch === 'string') safeUpdates.batch = updates.batch;
+
   if (isFirebaseConfigured() && db) {
-    await updateDoc(doc(db, 'users', uid), updates as Record<string, unknown>);
+    await updateDoc(doc(db, 'users', uid), safeUpdates as Record<string, unknown>);
   }
 
   const users = getStoredUsers();
@@ -184,7 +224,8 @@ export const updateUserProfile = async (
 
   const updatedProfile: UserProfile = {
     ...users[index],
-    ...updates,
+    ...safeUpdates,
+    role: users[index].role,
   };
 
   users[index] = updatedProfile;

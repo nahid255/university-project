@@ -6,6 +6,11 @@ service firebase.storage {
       return request.auth != null;
     }
 
+    function isAdmin() {
+      return isAuthenticated() &&
+        firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
     function isSafeImage(maxMB) {
       return isAuthenticated() &&
         request.resource.size < maxMB * 1024 * 1024 &&
@@ -13,7 +18,7 @@ service firebase.storage {
     }
 
     // =========================================================
-    // V1 STORAGE PATHS (PRESERVED)
+    // V1 STORAGE PATHS (PRESERVED & HARDENED)
     // =========================================================
 
     // Lost & Found item pictures (images only, max 5MB)
@@ -38,20 +43,22 @@ service firebase.storage {
     match /avatars/{userId}/{fileName} {
       allow read: if isAuthenticated();
       allow write: if isSafeImage(2) && request.auth.uid == userId;
+      allow delete: if isAuthenticated() && request.auth.uid == userId;
     }
 
-    // Notice attachments (PDF/Docs/Images, max 10MB)
+    // Official notice attachments (Admin only, PDF/Docs/Images, max 10MB)
     match /notices/{noticeId}/{fileName} {
       allow read: if isAuthenticated();
-      allow write: if isAuthenticated() &&
+      allow write: if isAdmin() &&
         request.resource.size < 10 * 1024 * 1024 &&
         (request.resource.contentType.matches('application/pdf') ||
          request.resource.contentType.matches('application/.*document.*') ||
          request.resource.contentType.matches('image/.*'));
+      allow delete: if isAdmin();
     }
 
     // =========================================================
-    // V2 STORAGE PATHS
+    // V2 & TRANSPORTATION STORAGE PATHS
     // =========================================================
 
     // Community post images (images only, max 5MB)
@@ -66,16 +73,28 @@ service firebase.storage {
       allow write: if isSafeImage(5);
     }
 
-    // Event banners (images only, max 5MB)
+    // Event banners (Admin only, images only, max 5MB)
     match /events/{eventId}/{fileName} {
       allow read: if isAuthenticated();
-      allow write: if isSafeImage(5);
+      allow write: if isAdmin() && isSafeImage(5);
+      allow delete: if isAdmin();
     }
 
-    // Club logos & banners (images only, max 5MB)
+    // Club logos & banners (Admin only, images only, max 5MB)
     match /clubs/{clubId}/{fileName} {
       allow read: if isAuthenticated();
-      allow write: if isSafeImage(5);
+      allow write: if isAdmin() && isSafeImage(5);
+      allow delete: if isAdmin();
+    }
+
+    // Transportation schedules / bus documents (Admin only)
+    match /transportation/{routeId}/{fileName} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin() &&
+        request.resource.size < 10 * 1024 * 1024 &&
+        (request.resource.contentType.matches('application/pdf') ||
+         request.resource.contentType.matches('image/.*'));
+      allow delete: if isAdmin();
     }
   }
 }

@@ -4,7 +4,6 @@ import {
   ShoppingBag,
   Plus,
   Search,
-  Tag,
   MessageSquare,
   Flag,
   Edit3,
@@ -258,31 +257,22 @@ export const MarketplacePage: React.FC = () => {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 sm:space-y-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
-            <ShoppingBag className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-            <span>Student Marketplace</span>
-          </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Buy and sell campus gear, electronics, calculators, and dorm essentials safely on campus
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div className="space-y-1.5">
+          <h1 className="jstu-page-title">Student Marketplace</h1>
+          <p className="jstu-secondary">
+            Buy and sell campus gear, electronics, calculators, and dorm essentials safely on campus.
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
-          <Link
-            to="/books"
-            className="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 text-xs font-bold hover:bg-emerald-100 transition-colors"
-          >
-            <BookCopy className="w-4 h-4" />
+        <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+          <Link to="/books" className="jstu-btn-secondary">
+            <BookCopy className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
             <span>Book Exchange</span>
           </Link>
-          <button
-            onClick={openCreateModal}
-            className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl text-xs font-bold shadow-md shadow-blue-500/20 transition-all"
-          >
+          <button onClick={openCreateModal} className="jstu-btn-primary">
             <Plus className="w-4 h-4" />
             <span>Post Listing</span>
           </button>
@@ -290,24 +280,25 @@ export const MarketplacePage: React.FC = () => {
       </div>
 
       {/* Filters */}
-      <div className="space-y-3">
-        <div className="flex flex-col md:flex-row items-center gap-3">
-          <div className="relative flex-1 w-full">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+      <div className="space-y-3.5">
+        <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3">
+          <div className="relative flex-1">
+            <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search laptops, scientific calculators, desk lamps, or seller..."
-              className="w-full pl-10 pr-4 py-2.5 rounded-2xl text-xs bg-white dark:bg-[#111C32] border border-slate-200/80 dark:border-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-xs"
+              className="jstu-input pl-11"
             />
           </div>
 
-          <div className="flex items-center gap-2 w-full md:w-auto">
+          <div className="grid grid-cols-2 md:flex items-center gap-2.5">
             <select
               value={conditionFilter}
               onChange={(e) => setConditionFilter(e.target.value)}
-              className="flex-1 md:flex-none px-3.5 py-2.5 rounded-2xl text-xs bg-white dark:bg-[#111C32] border border-slate-200/80 dark:border-slate-800 text-slate-900 dark:text-slate-100 font-semibold"
+              className="jstu-select md:w-44"
+              aria-label="Filter by condition"
             >
               <option value="All">All Conditions</option>
               {CONDITIONS.map((c) => (
@@ -320,7 +311,8 @@ export const MarketplacePage: React.FC = () => {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="flex-1 md:flex-none px-3.5 py-2.5 rounded-2xl text-xs bg-white dark:bg-[#111C32] border border-slate-200/80 dark:border-slate-800 text-slate-900 dark:text-slate-100 font-semibold"
+              className="jstu-select md:w-40"
+              aria-label="Filter by status"
             >
               <option value="All">All Statuses</option>
               {STATUSES.map((s) => (
@@ -337,10 +329,10 @@ export const MarketplacePage: React.FC = () => {
             <button
               key={cat}
               onClick={() => setCategoryFilter(cat)}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold shrink-0 border transition-all ${
+              className={`min-h-[38px] px-4 py-2 rounded-xl text-sm font-semibold shrink-0 border transition-colors ${
                 categoryFilter === cat
                   ? 'bg-blue-600 text-white border-blue-600 shadow-xs'
-                  : 'bg-white dark:bg-[#111C32] text-slate-600 dark:text-slate-300 border-slate-200/80 dark:border-slate-800 hover:border-slate-300'
+                  : 'bg-white dark:bg-[#111827] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
               }`}
             >
               {cat}
@@ -358,7 +350,7 @@ export const MarketplacePage: React.FC = () => {
           action={{ label: 'Post an Item', onClick: openCreateModal }}
         />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {filtered.map((item) => {
             const isOwner = currentUser?.uid === item.sellerId;
             const isAdmin = currentUser?.role === 'admin';
@@ -366,9 +358,9 @@ export const MarketplacePage: React.FC = () => {
             return (
               <div
                 key={item.id}
-                className="bg-white dark:bg-[#111C32] rounded-3xl overflow-hidden border border-slate-200/80 dark:border-slate-800 shadow-xs hover:border-blue-300 dark:hover:border-blue-700 transition-all flex flex-col justify-between group"
+                className="jstu-surface overflow-hidden hover:border-blue-300 dark:hover:border-blue-700 transition-colors flex flex-col justify-between group"
               >
-                <div className="relative h-48 bg-slate-100 dark:bg-slate-900 overflow-hidden">
+                <div className="relative h-48 bg-slate-100 dark:bg-slate-900 overflow-hidden border-b border-slate-200/80 dark:border-slate-800">
                   {item.imageUrl && isSafeUrl(item.imageUrl) ? (
                     <img
                       src={sanitizeUrl(item.imageUrl)}
@@ -378,7 +370,7 @@ export const MarketplacePage: React.FC = () => {
                   ) : (
                     <div className="w-full h-full flex flex-col items-center justify-center text-slate-400 gap-2">
                       <ImageIcon className="w-8 h-8 opacity-40" />
-                      <span className="text-[11px]">No Photo</span>
+                      <span className="jstu-meta">No Photo</span>
                     </div>
                   )}
 
@@ -395,44 +387,33 @@ export const MarketplacePage: React.FC = () => {
                     >
                       {item.status}
                     </Badge>
-                    <Badge variant="info" size="sm">
-                      {item.condition}
-                    </Badge>
                   </div>
 
-                  <div className="absolute bottom-3 right-3 px-3 py-1 rounded-xl bg-slate-900/85 text-white text-sm font-black backdrop-blur-xs">
+                  <div className="absolute bottom-3 right-3 px-3.5 py-1.5 rounded-xl bg-slate-900/90 text-white text-base font-bold font-mono tabular-nums">
                     ${item.price}
                   </div>
                 </div>
 
                 <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
                   <div className="space-y-2">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="text-[11px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">
-                        {item.category}
-                      </span>
-                      <span className="text-[10px] text-slate-400">
-                        {new Date(item.createdAt).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <h3 className="text-sm font-bold text-slate-900 dark:text-white line-clamp-1">
-                      {item.title}
-                    </h3>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
-                      {item.description}
+                    <p className="jstu-meta font-medium tabular-nums">
+                      {item.category} &middot; {item.condition} &middot;{' '}
+                      {new Date(item.createdAt).toLocaleDateString()}
                     </p>
+                    <h3 className="jstu-card-title line-clamp-1">{item.title}</h3>
+                    <p className="jstu-secondary line-clamp-2">{item.description}</p>
                   </div>
 
-                  <div className="space-y-3 pt-3 border-t border-slate-100 dark:border-slate-800">
-                    <div className="flex items-center justify-between text-xs">
+                  <div className="space-y-3 pt-4 border-t border-slate-200/80 dark:border-slate-800">
+                    <div className="flex items-center justify-between gap-2 text-sm">
                       <Link
                         to={`/students/${item.sellerId}`}
-                        className="font-semibold text-slate-700 dark:text-slate-300 hover:text-blue-600"
+                        className="font-semibold text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 truncate"
                       >
                         Seller: {item.sellerName}
                       </Link>
                       {item.sellerDepartment && (
-                        <span className="text-[10px] text-slate-400 truncate max-w-[120px]">
+                        <span className="jstu-meta truncate max-w-[140px]">
                           {item.sellerDepartment}
                         </span>
                       )}
@@ -445,7 +426,8 @@ export const MarketplacePage: React.FC = () => {
                           onChange={(e) =>
                             handleStatusChange(item, e.target.value as ListingStatus)
                           }
-                          className="flex-1 px-2.5 py-2 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700"
+                          className="jstu-select flex-1"
+                          aria-label="Listing status"
                         >
                           {STATUSES.map((s) => (
                             <option key={s} value={s}>
@@ -455,15 +437,17 @@ export const MarketplacePage: React.FC = () => {
                         </select>
                         <button
                           onClick={() => openEditModal(item)}
-                          className="p-2 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 hover:bg-blue-100"
+                          className="p-2.5 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
                           title="Edit listing"
+                          aria-label="Edit listing"
                         >
                           <Edit3 className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => setDeleteTarget(item)}
-                          className="p-2 rounded-xl bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 hover:bg-rose-100"
+                          className="p-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors"
                           title="Delete listing"
+                          aria-label="Delete listing"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -478,24 +462,26 @@ export const MarketplacePage: React.FC = () => {
                             );
                           }}
                           disabled={item.status === 'Sold'}
-                          className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold disabled:opacity-50 transition-colors"
+                          className="jstu-btn-primary flex-1"
                         >
-                          <MessageSquare className="w-3.5 h-3.5" />
+                          <MessageSquare className="w-4 h-4" />
                           <span>{item.status === 'Sold' ? 'Sold' : 'Contact Seller'}</span>
                         </button>
                         {isAdmin && (
                           <button
                             onClick={() => setDeleteTarget(item)}
-                            className="p-2 rounded-xl text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40"
+                            className="p-2.5 rounded-xl text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
                             title="Remove listing (Admin)"
+                            aria-label="Remove listing"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
                         )}
                         <button
                           onClick={() => setReportTarget(item)}
-                          className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-amber-600"
+                          className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-amber-600 transition-colors"
                           title="Report listing"
+                          aria-label="Report listing"
                         >
                           <Flag className="w-4 h-4" />
                         </button>
@@ -519,30 +505,26 @@ export const MarketplacePage: React.FC = () => {
       >
         <form onSubmit={handleSaveListing} className="space-y-4">
           {formError && (
-            <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 text-xs text-rose-700 dark:text-rose-300">
+            <div className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 text-sm font-medium text-rose-700 dark:text-rose-300">
               {formError}
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-              Product Name
-            </label>
+            <label className="jstu-label">Product Name</label>
             <input
               type="text"
               required
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Casio fx-991EX ClassWiz Scientific Calculator"
-              className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100"
+              className="jstu-input"
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Price (USD)
-              </label>
+              <label className="jstu-label">Price (USD)</label>
               <input
                 type="number"
                 min="0"
@@ -551,18 +533,16 @@ export const MarketplacePage: React.FC = () => {
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
                 placeholder="25"
-                className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100"
+                className="jstu-input font-mono tabular-nums"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Category
-              </label>
+              <label className="jstu-label">Category</label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value as MarketplaceCategory)}
-                className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 font-semibold"
+                className="jstu-select"
               >
                 {CATEGORIES.filter((c) => c !== 'All').map((c) => (
                   <option key={c} value={c}>
@@ -573,13 +553,11 @@ export const MarketplacePage: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Condition
-              </label>
+              <label className="jstu-label">Condition</label>
               <select
                 value={condition}
                 onChange={(e) => setCondition(e.target.value as ItemCondition)}
-                className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 font-semibold"
+                className="jstu-select"
               >
                 {CONDITIONS.map((c) => (
                   <option key={c} value={c}>
@@ -591,26 +569,22 @@ export const MarketplacePage: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-              Description
-            </label>
+            <label className="jstu-label">Description</label>
             <textarea
               rows={3}
               required
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Include age, accessories included, meetup location preference on campus..."
-              className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100"
+              className="jstu-textarea"
             />
           </div>
 
           <div className="space-y-2">
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
-              Product Image (Optional)
-            </label>
-            <div className="flex flex-col sm:flex-row items-center gap-2.5">
-              <label className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 text-xs font-semibold cursor-pointer border border-slate-200 dark:border-slate-700">
-                <Camera className="w-4 h-4 text-blue-600" />
+            <label className="jstu-label">Product Image (Optional)</label>
+            <div className="flex flex-col sm:flex-row items-center gap-3">
+              <label className="jstu-btn-secondary w-full sm:w-auto cursor-pointer shrink-0">
+                <Camera className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                 <span>{isUploading ? 'Uploading...' : 'Upload Image'}</span>
                 <input
                   type="file"
@@ -625,15 +599,15 @@ export const MarketplacePage: React.FC = () => {
                 value={imageUrl}
                 onChange={(e) => setImageUrl(e.target.value)}
                 placeholder="Or paste https:// image URL"
-                className="flex-1 w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100"
+                className="jstu-input flex-1"
               />
             </div>
           </div>
 
           {/* Privacy Controls */}
-          <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 space-y-3">
-            <h4 className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-              <Lock className="w-3.5 h-3.5 text-blue-600" />
+          <div className="jstu-inset p-4 space-y-3">
+            <h4 className="text-sm font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+              <Lock className="w-4 h-4 text-blue-600 dark:text-blue-400" />
               <span>Seller Contact Privacy</span>
             </h4>
             <input
@@ -641,34 +615,30 @@ export const MarketplacePage: React.FC = () => {
               value={sellerPhone}
               onChange={(e) => setSellerPhone(e.target.value)}
               placeholder="Optional phone number (only shown if public toggle is checked)"
-              className="w-full px-3 py-2 rounded-xl text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100"
+              className="jstu-input"
             />
-            <label className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300 cursor-pointer">
+            <label className="flex items-start gap-2.5 text-sm text-slate-700 dark:text-slate-300 cursor-pointer">
               <input
                 type="checkbox"
                 checked={isContactPublic}
                 onChange={(e) => setIsContactPublic(e.target.checked)}
-                className="w-4 h-4 rounded text-blue-600"
+                className="w-4 h-4 mt-0.5 rounded text-blue-600"
               />
               <span>
-                Display my email/phone publicly (Otherwise buyers contact you via CampusMate Messaging)
+                Display my email/phone publicly (Otherwise buyers contact you via JSTU Campus Messaging)
               </span>
             </label>
           </div>
 
-          <div className="flex justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+          <div className="flex justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
-              className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+              className="jstu-btn-secondary"
             >
               Cancel
             </button>
-            <button
-              type="submit"
-              disabled={isUploading}
-              className="px-5 py-2 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50"
-            >
+            <button type="submit" disabled={isUploading} className="jstu-btn-primary">
               {editingItem ? 'Save Changes' : 'Publish Listing'}
             </button>
           </div>
@@ -687,64 +657,58 @@ export const MarketplacePage: React.FC = () => {
       >
         {contactListing && (
           <form onSubmit={handleSendInquiry} className="space-y-4">
-            <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800 space-y-2 text-xs">
-              <div className="flex items-center justify-between">
-                <span className="font-bold text-slate-800 dark:text-slate-200">
+            <div className="jstu-inset p-4 space-y-2.5 text-sm">
+              <div className="flex items-center justify-between gap-2">
+                <span className="font-semibold text-slate-900 dark:text-slate-100">
                   {contactListing.sellerName}
                 </span>
-                <Badge variant="neutral" size="sm">
+                <span className="jstu-meta">
                   {contactListing.sellerDepartment || 'Student'}
-                </Badge>
+                </span>
               </div>
               {contactListing.isContactPublic ? (
-                <div className="space-y-1 text-slate-600 dark:text-slate-300 pt-1">
-                  <p className="flex items-center gap-1.5">
-                    <Mail className="w-3.5 h-3.5 text-slate-400" />
+                <div className="space-y-1.5 text-slate-700 dark:text-slate-300 pt-1">
+                  <p className="flex items-center gap-2">
+                    <Mail className="w-4 h-4 text-slate-400" />
                     <span>{contactListing.sellerEmail}</span>
                   </p>
                   {contactListing.sellerPhone && (
-                    <p className="flex items-center gap-1.5">
-                      <Phone className="w-3.5 h-3.5 text-slate-400" />
+                    <p className="flex items-center gap-2">
+                      <Phone className="w-4 h-4 text-slate-400" />
                       <span>{contactListing.sellerPhone}</span>
                     </p>
                   )}
                 </div>
               ) : (
-                <p className="text-[11px] text-slate-500 flex items-center gap-1.5">
-                  <Lock className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                <p className="jstu-meta flex items-start gap-2">
+                  <Lock className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
                   <span>
-                    Seller keeps direct phone/email private. Sending an inquiry opens a secure 1-to-1 CampusMate chat.
+                    Seller keeps direct phone/email private. Sending an inquiry opens a secure 1-to-1 JSTU Campus chat.
                   </span>
                 </p>
               )}
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Your Message
-              </label>
+              <label className="jstu-label">Your Message</label>
               <textarea
                 rows={3}
                 required
                 value={inquiryMessage}
                 onChange={(e) => setInquiryMessage(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100"
+                className="jstu-textarea"
               />
             </div>
 
-            <div className="flex justify-end gap-2">
+            <div className="flex justify-end gap-3 pt-2">
               <button
                 type="button"
                 onClick={() => setContactListing(null)}
-                className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+                className="jstu-btn-secondary"
               >
                 Cancel
               </button>
-              <button
-                type="submit"
-                disabled={sendingInquiry}
-                className="px-4 py-2 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50"
-              >
+              <button type="submit" disabled={sendingInquiry} className="jstu-btn-primary">
                 {sendingInquiry ? 'Sending...' : 'Send Message & Open Chat'}
               </button>
             </div>

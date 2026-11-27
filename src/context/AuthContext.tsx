@@ -15,7 +15,7 @@ interface AuthContextType {
   currentUser: UserProfile | null;
   loading: boolean;
   isFirebase: boolean;
-  login: (email: string, pass: string) => Promise<UserProfile>;
+  login: (email: string, pass: string, expectedPortal?: 'student' | 'admin') => Promise<UserProfile>;
   register: (params: RegisterParams) => Promise<UserProfile>;
   logout: () => Promise<void>;
   refreshProfile: () => void;
@@ -79,10 +79,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [isFirebase]);
 
-  const login = async (email: string, pass: string) => {
+  const login = async (
+    email: string,
+    pass: string,
+    expectedPortal?: 'student' | 'admin'
+  ) => {
     setLoading(true);
     try {
-      const user = await loginUser(email, pass);
+      const user = await loginUser(email, pass, expectedPortal);
       setCurrentUser(user);
       return user;
     } finally {
@@ -112,6 +116,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const setDemoUser = (user: UserProfile) => {
+    if (isFirebase) {
+      throw new Error('Demo account switching is disabled when live Firebase Auth is active.');
+    }
     localStorage.setItem('campusmate_current_user_v1', JSON.stringify(user));
     setCurrentUser(user);
   };

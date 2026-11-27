@@ -1,16 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Search,
-  ShieldCheck,
-  CheckCircle,
-  XCircle,
-  Trash2,
-  MapPin,
-  Calendar,
-  AlertCircle,
-  Eye,
-  FileQuestion,
-} from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 import {
   getLostFoundItems,
   getClaimRequests,
@@ -71,53 +60,48 @@ export const AdminLostFoundPage: React.FC = () => {
   const pendingClaims = claims.filter((c) => c.status === 'pending');
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 sm:space-y-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
-            <Search className="w-6 h-6 text-rose-500" />
-            <span>Lost & Found Moderation</span>
-          </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Review ownership proof for claim requests and moderate community listings
-          </p>
-        </div>
+      <div className="space-y-1.5">
+        <h1 className="jstu-page-title">Lost &amp; Found Moderation</h1>
+        <p className="jstu-secondary">
+          Review ownership proof for claim requests and moderate community listings.
+        </p>
       </div>
 
       {/* Tabs */}
       <div className="flex border-b border-slate-200 dark:border-slate-800 gap-8">
         <button
           onClick={() => setActiveTab('claims')}
-          className={`pb-3 text-sm font-bold transition-all relative flex items-center gap-2 ${
+          className={`pb-3.5 text-[15px] font-semibold transition-colors relative flex items-center gap-2.5 ${
             activeTab === 'claims'
-              ? 'text-rose-600 dark:text-rose-400'
-              : 'text-slate-500 dark:text-slate-400 hover:text-slate-700'
+              ? 'text-blue-600 dark:text-blue-400'
+              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
           }`}
         >
           <span>Claim Requests</span>
-          <span className="px-2 py-0.5 rounded-full text-xs bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 font-extrabold">
+          <span className="px-2.5 py-0.5 rounded-full text-xs bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 font-bold tabular-nums">
             {pendingClaims.length} Pending
           </span>
           {activeTab === 'claims' && (
-            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-rose-600 rounded-full" />
+            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 dark:bg-blue-400 rounded-full" />
           )}
         </button>
 
         <button
           onClick={() => setActiveTab('items')}
-          className={`pb-3 text-sm font-bold transition-all relative flex items-center gap-2 ${
+          className={`pb-3.5 text-[15px] font-semibold transition-colors relative flex items-center gap-2.5 ${
             activeTab === 'items'
-              ? 'text-purple-600 dark:text-purple-400'
-              : 'text-slate-500 dark:text-slate-400 hover:text-slate-700'
+              ? 'text-blue-600 dark:text-blue-400'
+              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
           }`}
         >
           <span>All Reported Items</span>
-          <span className="px-2 py-0.5 rounded-full text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-extrabold">
+          <span className="px-2.5 py-0.5 rounded-full text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold tabular-nums">
             {items.length}
           </span>
           {activeTab === 'items' && (
-            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-purple-600 rounded-full" />
+            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 dark:bg-blue-400 rounded-full" />
           )}
         </button>
       </div>
@@ -126,23 +110,18 @@ export const AdminLostFoundPage: React.FC = () => {
       {activeTab === 'claims' ? (
         <div className="space-y-4">
           {claims.length === 0 ? (
-            <div className="p-8 text-center text-xs text-slate-400 bg-white dark:bg-[#111C32] rounded-3xl border border-slate-200/80 dark:border-slate-800">
+            <div className="jstu-surface p-10 text-center jstu-secondary">
               No claim requests have been filed yet.
             </div>
           ) : (
             claims.map((claim) => (
-              <div
-                key={claim.id}
-                className="p-6 rounded-3xl bg-white dark:bg-[#111C32] border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-4"
-              >
+              <div key={claim.id} className="jstu-surface p-6 space-y-4">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                      Claim on Found Item:
+                    <span className="jstu-meta font-semibold uppercase tracking-wide">
+                      Claim on Found Item
                     </span>
-                    <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-                      {claim.itemTitle}
-                    </h3>
+                    <h3 className="jstu-card-title mt-0.5">{claim.itemTitle}</h3>
                   </div>
 
                   <Badge
@@ -159,39 +138,39 @@ export const AdminLostFoundPage: React.FC = () => {
                   </Badge>
                 </div>
 
-                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800 space-y-2 text-xs">
+                <div className="jstu-inset p-4 space-y-3 text-sm">
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <span className="font-bold text-slate-800 dark:text-slate-200">
+                    <span className="font-semibold text-slate-900 dark:text-slate-100">
                       Claimant: {claim.claimantName}
                     </span>
-                    <span className="text-slate-500 font-mono">
-                      {claim.claimantEmail} &bull; {claim.claimantPhone}
+                    <span className="jstu-meta font-mono tabular-nums">
+                      {claim.claimantEmail} &middot; {claim.claimantPhone}
                     </span>
                   </div>
 
-                  <div className="pt-2">
-                    <strong className="block text-slate-700 dark:text-slate-300 mb-1">
+                  <div className="pt-1">
+                    <strong className="block text-slate-800 dark:text-slate-200 mb-1.5">
                       Submitted Distinguishing Proof:
                     </strong>
-                    <p className="text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-line bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200/60 dark:border-slate-700">
+                    <p className="jstu-body whitespace-pre-line bg-white dark:bg-[#0F172A] p-3.5 rounded-xl border border-slate-200 dark:border-slate-700">
                       {claim.proofDetails}
                     </p>
                   </div>
                 </div>
 
                 {claim.status === 'pending' && (
-                  <div className="flex items-center justify-end gap-2.5 pt-2">
+                  <div className="flex flex-wrap items-center justify-end gap-2.5 pt-2">
                     <button
                       onClick={() => handleClaimReview(claim.id, 'rejected')}
-                      className="px-4 py-2 rounded-xl text-xs font-bold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 border border-rose-200 dark:border-rose-900/40 transition-colors"
+                      className="jstu-btn-secondary text-rose-600 dark:text-rose-400"
                     >
                       Reject Claim
                     </button>
                     <button
                       onClick={() => handleClaimReview(claim.id, 'approved')}
-                      className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 shadow-xs transition-colors"
+                      className="inline-flex items-center justify-center min-h-[42px] px-5 py-2.5 rounded-xl text-[15px] font-semibold text-white bg-emerald-600 hover:bg-emerald-700 shadow-xs transition-colors"
                     >
-                      Approve & Grant Ownership
+                      Approve &amp; Grant Ownership
                     </button>
                   </div>
                 )}
@@ -201,51 +180,50 @@ export const AdminLostFoundPage: React.FC = () => {
         </div>
       ) : (
         /* Items Tab Table */
-        <div className="bg-white dark:bg-[#111C32] rounded-3xl border border-slate-200/80 dark:border-slate-800 overflow-hidden shadow-xs">
+        <div className="jstu-surface overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 dark:bg-slate-900/60 border-b border-slate-200/80 dark:border-slate-800 text-slate-500 dark:text-slate-400 uppercase tracking-wider font-bold">
+            <table className="w-full text-left">
+              <thead>
                 <tr>
-                  <th className="py-3.5 px-4 sm:px-6">Item</th>
-                  <th className="py-3.5 px-4">Type</th>
-                  <th className="py-3.5 px-4">Reporter</th>
-                  <th className="py-3.5 px-4">Location</th>
-                  <th className="py-3.5 px-4">Status</th>
-                  <th className="py-3.5 px-4 text-right">Actions</th>
+                  <th className="jstu-table-th">Item</th>
+                  <th className="jstu-table-th">Type</th>
+                  <th className="jstu-table-th">Reporter</th>
+                  <th className="jstu-table-th">Location</th>
+                  <th className="jstu-table-th">Status</th>
+                  <th className="jstu-table-th text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+              <tbody className="divide-y divide-slate-200/80 dark:divide-slate-800">
                 {items.map((itm) => (
                   <tr
                     key={itm.id}
                     className="hover:bg-slate-50/80 dark:hover:bg-slate-900/40 transition-colors"
                   >
-                    <td className="py-3.5 px-4 sm:px-6">
-                      <p className="font-bold text-slate-900 dark:text-white truncate max-w-xs">
+                    <td className="jstu-table-td">
+                      <p className="font-semibold text-slate-900 dark:text-slate-100 truncate max-w-xs">
                         {itm.title}
                       </p>
-                      <p className="text-[11px] text-slate-400">
-                        {itm.category} &bull; {new Date(itm.date).toLocaleDateString()}
+                      <p className="jstu-meta tabular-nums">
+                        {itm.category} &middot; {new Date(itm.date).toLocaleDateString()}
                       </p>
                     </td>
-                    <td className="py-3.5 px-4">
+                    <td className="jstu-table-td">
                       <Badge variant={itm.type === 'lost' ? 'danger' : 'success'} size="sm">
                         {itm.type.toUpperCase()}
                       </Badge>
                     </td>
-                    <td className="py-3.5 px-4 text-slate-700 dark:text-slate-300">
-                      {itm.reporterName}
-                    </td>
-                    <td className="py-3.5 px-4 text-slate-500">
+                    <td className="jstu-table-td">{itm.reporterName}</td>
+                    <td className="jstu-table-td text-slate-600 dark:text-slate-400">
                       {itm.location}
                     </td>
-                    <td className="py-3.5 px-4">
+                    <td className="jstu-table-td">
                       <select
                         value={itm.status}
                         onChange={(e) =>
                           handleStatusChange(itm.id, e.target.value as LostFoundStatus)
                         }
-                        className="px-2 py-1 rounded-lg text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 font-semibold"
+                        className="jstu-select min-h-[38px] w-36"
+                        aria-label="Item status"
                       >
                         <option value="active">Active</option>
                         <option value="claimed">Claimed</option>
@@ -253,10 +231,11 @@ export const AdminLostFoundPage: React.FC = () => {
                         <option value="closed">Closed</option>
                       </select>
                     </td>
-                    <td className="py-3.5 px-4 text-right">
+                    <td className="jstu-table-td text-right">
                       <button
                         onClick={() => setDeleteTargetId(itm.id)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+                        className="p-2 rounded-lg text-slate-500 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+                        aria-label="Delete listing"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>

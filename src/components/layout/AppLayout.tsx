@@ -11,17 +11,14 @@ export const AppLayout: React.FC = () => {
   const isAdminArea = location.pathname.startsWith('/admin');
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F5F8FF] dark:bg-[#080F1F] text-slate-800 dark:text-slate-100 transition-colors">
-      {/* Firebase Status & Diagnostics Bar */}
+    <div className="min-h-screen flex flex-col bg-[#F6F8FB] dark:bg-[#0B1120] text-slate-900 dark:text-slate-100 transition-colors">
       <FirebaseStatusBanner />
 
-      {/* Top Navbar */}
       <Navbar
         onToggleSidebar={() => setSidebarOpen((prev) => !prev)}
         isAdminArea={isAdminArea}
       />
 
-      {/* Main Container with Sidebar */}
       <div className="flex-1 flex w-full">
         {isAdminArea ? (
           <AdminSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
@@ -29,15 +26,14 @@ export const AppLayout: React.FC = () => {
           <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
         )}
 
-        <main className="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full">
+        <main className="flex-1 min-w-0 p-5 sm:p-8 lg:p-10 max-w-[1360px] mx-auto w-full">
           <Outlet />
         </main>
       </div>
 
-      {/* University Footer */}
-      <footer className="border-t border-slate-200/80 dark:border-slate-800/80 py-4 px-6 text-center text-xs text-slate-400 dark:text-slate-400 bg-white/50 dark:bg-slate-900/40 backdrop-blur-xs">
+      <footer className="border-t border-slate-200 dark:border-slate-800 py-5 px-6 text-center text-sm text-slate-500 dark:text-slate-400 bg-white/70 dark:bg-[#111827]/70">
         <p>
-          &copy; {new Date().getFullYear()} CampusMate &bull; University Student Management & Campus Community Ecosystem &bull; All Rights Reserved
+          &copy; {new Date().getFullYear()} JSTU Campus &middot; Official University Administration &amp; Student Ecosystem &middot; All Rights Reserved
         </p>
       </footer>
     </div>

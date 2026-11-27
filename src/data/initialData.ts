@@ -397,7 +397,7 @@ export const INITIAL_NOTICES: Notice[] = [
   {
     id: 'nt-004',
     title: 'Central Library Extended Operating Hours during Exam Weeks',
-    content: 'To support students during the upcoming mid-semester examinations, the Central University Library will remain open 24 hours daily starting Monday, November 17 through Friday, December 5. Study pods and silent reading zones on the 3rd and 4th floors require online seat reservation via the CampusMate portal.',
+    content: 'To support students during the upcoming mid-semester examinations, the Central University Library will remain open 24 hours daily starting Monday, November 17 through Friday, December 5. Study pods and silent reading zones on the 3rd and 4th floors require online seat reservation via the JSTU Campus portal.',
     category: 'Academic',
     publishedAt: '2026-11-02T10:00:00.000Z',
     isPinned: false,

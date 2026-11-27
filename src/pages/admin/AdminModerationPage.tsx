@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
   Flag,
-  Users,
   EyeOff,
   Eye,
   Trash2,
@@ -138,15 +137,14 @@ export const AdminModerationPage: React.FC = () => {
     );
   });
 
+  const pendingReportsCount = reports.filter((r) => r.status === 'pending').length;
+
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
-          <Flag className="w-6 h-6 text-rose-600" />
-          <span>Community &amp; Content Moderation</span>
-        </h1>
-        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-          Review student abuse reports and moderate community discussions
+    <div className="space-y-6 sm:space-y-8">
+      <div className="space-y-1.5">
+        <h1 className="jstu-page-title">Community &amp; Content Moderation</h1>
+        <p className="jstu-secondary">
+          Review student abuse reports and moderate community discussions across the campus platform.
         </p>
       </div>
 
@@ -154,39 +152,43 @@ export const AdminModerationPage: React.FC = () => {
       <div className="flex border-b border-slate-200 dark:border-slate-800 gap-8">
         <button
           onClick={() => setActiveTab('reports')}
-          className={`pb-3 text-sm font-bold relative ${
-            activeTab === 'reports' ? 'text-purple-600' : 'text-slate-500'
+          className={`pb-3.5 text-[15px] font-semibold relative whitespace-nowrap shrink-0 transition-colors ${
+            activeTab === 'reports'
+              ? 'text-purple-600 dark:text-purple-400'
+              : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
           }`}
         >
-          <span>Reports Queue ({reports.filter((r) => r.status === 'pending').length} pending)</span>
+          <span className="tabular-nums">Reports Queue ({pendingReportsCount} pending)</span>
           {activeTab === 'reports' && (
-            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-purple-600 rounded-full" />
+            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-purple-600 dark:bg-purple-400 rounded-full" />
           )}
         </button>
 
         <button
           onClick={() => setActiveTab('posts')}
-          className={`pb-3 text-sm font-bold relative ${
-            activeTab === 'posts' ? 'text-purple-600' : 'text-slate-500'
+          className={`pb-3.5 text-[15px] font-semibold relative whitespace-nowrap shrink-0 transition-colors ${
+            activeTab === 'posts'
+              ? 'text-purple-600 dark:text-purple-400'
+              : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
           }`}
         >
-          <span>Community Posts ({posts.length})</span>
+          <span className="tabular-nums">Community Posts ({posts.length})</span>
           {activeTab === 'posts' && (
-            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-purple-600 rounded-full" />
+            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-purple-600 dark:bg-purple-400 rounded-full" />
           )}
         </button>
       </div>
 
       {/* Search & Filter */}
-      <div className="flex flex-col sm:flex-row items-center gap-3">
-        <div className="relative flex-1 w-full">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+      <div className="jstu-surface p-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+        <div className="relative flex-1">
+          <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by title, reporter, or author..."
-            className="w-full pl-10 pr-4 py-2.5 rounded-2xl text-xs bg-white dark:bg-[#111C32] border border-slate-200/80 dark:border-slate-800 text-slate-900 dark:text-slate-100"
+            className="jstu-input pl-11"
           />
         </div>
 
@@ -194,7 +196,8 @@ export const AdminModerationPage: React.FC = () => {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value as 'all' | ReportStatus)}
-            className="w-full sm:w-auto px-3.5 py-2.5 rounded-2xl text-xs bg-white dark:bg-[#111C32] border border-slate-200/80 dark:border-slate-800 font-semibold"
+            className="jstu-select sm:w-52"
+            aria-label="Filter reports by status"
           >
             <option value="all">All Statuses</option>
             <option value="pending">Pending</option>
@@ -212,20 +215,15 @@ export const AdminModerationPage: React.FC = () => {
             description="All reported items matching your filter have been addressed."
           />
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {filteredReports.map((rep) => (
-              <div
-                key={rep.id}
-                className="bg-white dark:bg-[#111C32] rounded-3xl p-5 border border-slate-200/80 dark:border-slate-800 space-y-3"
-              >
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                  <div className="flex flex-wrap items-center gap-2">
+              <div key={rep.id} className="jstu-surface p-5 sm:p-6 space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="flex flex-wrap items-center gap-2.5 min-w-0">
                     <Badge variant="purple" size="sm">
                       {rep.targetType}
                     </Badge>
-                    <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-                      {rep.targetTitle}
-                    </h3>
+                    <h3 className="jstu-card-title truncate">{rep.targetTitle}</h3>
                   </div>
                   <Badge
                     variant={
@@ -241,39 +239,40 @@ export const AdminModerationPage: React.FC = () => {
                   </Badge>
                 </div>
 
-                <div className="text-xs text-slate-600 dark:text-slate-300 space-y-1">
-                  <p>
-                    <strong>Reason:</strong> {rep.reason} &bull;{' '}
-                    <span className="text-slate-400">Reported by {rep.reporterName}</span>
+                <div className="space-y-3">
+                  <p className="jstu-secondary">
+                    <strong className="font-semibold text-slate-900 dark:text-slate-100">
+                      Reason:
+                    </strong>{' '}
+                    {rep.reason} &middot;{' '}
+                    <span className="jstu-meta">Reported by {rep.reporterName}</span>
                   </p>
-                  <p className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800">
-                    {rep.details}
-                  </p>
+                  <p className="jstu-inset p-4 jstu-secondary">{rep.details}</p>
                   {rep.actionTaken && (
-                    <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">
+                    <p className="text-sm text-emerald-700 dark:text-emerald-400 font-semibold">
                       Action taken: {rep.actionTaken} ({rep.reviewedBy})
                     </p>
                   )}
                 </div>
 
                 {rep.status === 'pending' && (
-                  <div className="flex flex-wrap justify-end gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+                  <div className="flex flex-wrap justify-end gap-2.5 pt-3 border-t border-slate-200/80 dark:border-slate-800">
                     <button
                       onClick={() =>
                         handleResolveReport(rep, 'dismissed', 'Reviewed — no policy violation')
                       }
-                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
+                      className="jstu-btn-secondary"
                     >
-                      <XCircle className="w-3.5 h-3.5" />
+                      <XCircle className="w-4 h-4" />
                       <span>Dismiss</span>
                     </button>
                     <button
                       onClick={() =>
                         handleResolveReport(rep, 'resolved', 'Warning issued / Resolved')
                       }
-                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-600 text-white hover:bg-emerald-700"
+                      className="inline-flex items-center justify-center gap-2 min-h-[42px] px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-[15px] font-semibold transition-colors"
                     >
-                      <CheckCircle2 className="w-3.5 h-3.5" />
+                      <CheckCircle2 className="w-4 h-4" />
                       <span>Mark Resolved</span>
                     </button>
                     {(rep.targetType === 'post' ||
@@ -288,9 +287,9 @@ export const AdminModerationPage: React.FC = () => {
                             true
                           )
                         }
-                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-bold bg-rose-600 text-white hover:bg-rose-700"
+                        className="jstu-btn-danger"
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
+                        <Trash2 className="w-4 h-4" />
                         <span>Remove Target &amp; Resolve</span>
                       </button>
                     )}
@@ -300,15 +299,21 @@ export const AdminModerationPage: React.FC = () => {
             ))}
           </div>
         )
+      ) : filteredPosts.length === 0 ? (
+        <EmptyState
+          icon={Flag}
+          title="No matching community posts"
+          description="No community discussions match your current search filter."
+        />
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-4">
           {filteredPosts.map((post) => (
             <div
               key={post.id}
-              className="bg-white dark:bg-[#111C32] rounded-3xl p-5 border border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+              className="jstu-surface p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
             >
-              <div className="space-y-1 min-w-0">
-                <div className="flex items-center gap-2">
+              <div className="space-y-1.5 min-w-0">
+                <div className="flex flex-wrap items-center gap-2">
                   <Badge variant={post.status === 'active' ? 'success' : 'warning'} size="sm">
                     {post.status}
                   </Badge>
@@ -316,36 +321,35 @@ export const AdminModerationPage: React.FC = () => {
                     {post.category}
                   </Badge>
                 </div>
-                <h3 className="text-sm font-bold text-slate-900 dark:text-white truncate">
-                  {post.title}
-                </h3>
-                <p className="text-xs text-slate-500">
-                  By {post.authorName} &bull; {new Date(post.createdAt).toLocaleDateString()} &bull;{' '}
+                <h3 className="jstu-card-title truncate">{post.title}</h3>
+                <p className="jstu-meta tabular-nums">
+                  By {post.authorName} &middot; {new Date(post.createdAt).toLocaleDateString()} &middot;{' '}
                   {post.likesCount} likes, {post.commentsCount} comments
                 </p>
               </div>
 
-              <div className="flex items-center gap-2 shrink-0">
+              <div className="flex items-center gap-2.5 shrink-0">
                 <button
                   onClick={() => handleTogglePostVisibility(post)}
-                  className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-200"
+                  className="jstu-btn-secondary"
                 >
                   {post.status === 'active' ? (
                     <>
-                      <EyeOff className="w-3.5 h-3.5" />
+                      <EyeOff className="w-4 h-4" />
                       <span>Hide</span>
                     </>
                   ) : (
                     <>
-                      <Eye className="w-3.5 h-3.5" />
+                      <Eye className="w-4 h-4" />
                       <span>Restore</span>
                     </>
                   )}
                 </button>
                 <button
                   onClick={() => handleDeletePost(post)}
-                  className="p-2 rounded-xl text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40"
+                  className="p-2.5 rounded-xl text-rose-600 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-950/40 transition-colors"
                   title="Delete post"
+                  aria-label={`Delete post ${post.title}`}
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>

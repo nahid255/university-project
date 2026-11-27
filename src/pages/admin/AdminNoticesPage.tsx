@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Bell,
   Plus,
   Search,
   Pin,
   Edit2,
   Trash2,
-  FileText,
-  Calendar,
-  CheckCircle,
-  Eye,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import {
@@ -150,22 +145,19 @@ export const AdminNoticesPage: React.FC = () => {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 sm:space-y-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
-            <Bell className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
-            <span>Campus Notice Management</span>
-          </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Author and broadcast official university circulars, emergency updates, and examination seat plans
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div className="space-y-1.5">
+          <h1 className="jstu-page-title">Campus Notice Management</h1>
+          <p className="jstu-secondary">
+            Author and broadcast official university circulars, emergency updates, and examination seat plans.
           </p>
         </div>
 
         <button
           onClick={openCreateModal}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-2xl text-xs font-bold shadow-md shadow-emerald-600/20 transition-all self-start sm:self-auto"
+          className="inline-flex items-center justify-center gap-2 min-h-[42px] px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-[15px] font-semibold shadow-xs transition-colors self-start sm:self-auto shrink-0"
         >
           <Plus className="w-4 h-4" />
           <span>Publish New Circular</span>
@@ -173,61 +165,64 @@ export const AdminNoticesPage: React.FC = () => {
       </div>
 
       {/* Search Input */}
-      <div className="bg-white dark:bg-[#111C32] rounded-3xl p-4 border border-slate-200/80 dark:border-slate-800 shadow-xs">
+      <div className="jstu-surface p-4">
         <div className="relative">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search circulars by title, keyword, or category..."
-            className="w-full pl-10 pr-4 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="jstu-input pl-11"
           />
         </div>
       </div>
 
       {/* Notice List Table */}
-      <div className="bg-white dark:bg-[#111C32] rounded-3xl border border-slate-200/80 dark:border-slate-800 overflow-hidden shadow-xs">
+      <div className="jstu-surface overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 dark:bg-slate-900/60 border-b border-slate-200/80 dark:border-slate-800 text-slate-500 dark:text-slate-400 uppercase tracking-wider font-bold">
+          <table className="w-full text-left">
+            <thead>
               <tr>
-                <th className="py-3.5 px-4 sm:px-6">Notice Title</th>
-                <th className="py-3.5 px-4">Category</th>
-                <th className="py-3.5 px-4">Status</th>
-                <th className="py-3.5 px-4">Published Date</th>
-                <th className="py-3.5 px-4 text-right">Actions</th>
+                <th className="jstu-table-th">Notice Title</th>
+                <th className="jstu-table-th">Category</th>
+                <th className="jstu-table-th">Status</th>
+                <th className="jstu-table-th">Published Date</th>
+                <th className="jstu-table-th text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+            <tbody className="divide-y divide-slate-200/80 dark:divide-slate-800">
               {filtered.map((n) => (
                 <tr
                   key={n.id}
                   className="hover:bg-slate-50/80 dark:hover:bg-slate-900/40 transition-colors"
                 >
-                  <td className="py-3.5 px-4 sm:px-6">
-                    <div className="flex items-center gap-2">
+                  <td className="jstu-table-td">
+                    <div className="flex items-center gap-2.5">
                       {n.isPinned && (
-                        <span className="p-1 rounded bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-400">
-                          <Pin className="w-3 h-3 fill-amber-600" />
+                        <span
+                          className="p-1.5 rounded-lg bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-400 shrink-0"
+                          title="Pinned circular"
+                        >
+                          <Pin className="w-3.5 h-3.5 fill-amber-600" />
                         </span>
                       )}
-                      <div>
-                        <p className="font-bold text-slate-900 dark:text-white line-clamp-1 max-w-md">
+                      <div className="min-w-0">
+                        <p className="font-semibold text-slate-900 dark:text-slate-100 line-clamp-1 max-w-md">
                           {n.title}
                         </p>
-                        <p className="text-[11px] text-slate-400">
-                          {n.department || 'Administration'} &bull; Author: {n.authorName}
+                        <p className="jstu-meta">
+                          {n.department || 'Administration'} &middot; Author: {n.authorName}
                         </p>
                       </div>
                     </div>
                   </td>
-                  <td className="py-3.5 px-4">
+                  <td className="jstu-table-td">
                     <Badge variant="info" size="sm">
                       {n.category}
                     </Badge>
                   </td>
-                  <td className="py-3.5 px-4">
+                  <td className="jstu-table-td">
                     <Badge
                       variant={n.status === 'published' ? 'success' : 'warning'}
                       size="sm"
@@ -235,22 +230,24 @@ export const AdminNoticesPage: React.FC = () => {
                       {n.status.toUpperCase()}
                     </Badge>
                   </td>
-                  <td className="py-3.5 px-4 text-slate-500 font-mono text-[11px]">
+                  <td className="jstu-table-td jstu-meta font-mono tabular-nums whitespace-nowrap">
                     {new Date(n.publishedAt).toLocaleDateString()}
                   </td>
-                  <td className="py-3.5 px-4 text-right">
-                    <div className="flex items-center justify-end gap-1">
+                  <td className="jstu-table-td text-right">
+                    <div className="flex items-center justify-end gap-1.5">
                       <button
                         onClick={() => openEditModal(n)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+                        className="p-2 rounded-lg text-slate-500 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800"
                         title="Edit notice"
+                        aria-label="Edit notice"
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => setDeleteId(n.id)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+                        className="p-2 rounded-lg text-slate-500 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-slate-100 dark:hover:bg-slate-800"
                         title="Delete notice"
+                        aria-label="Delete notice"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -273,28 +270,24 @@ export const AdminNoticesPage: React.FC = () => {
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-              Notice Title
-            </label>
+            <label className="jstu-label">Notice Title</label>
             <input
               type="text"
               required
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Schedule of Final Term Examinations - Fall 2026"
-              className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
+              className="jstu-input"
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Category
-              </label>
+              <label className="jstu-label">Category</label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value as NoticeCategory)}
-                className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-semibold"
+                className="jstu-select"
               >
                 {CATEGORIES.map((c) => (
                   <option key={c} value={c}>
@@ -305,27 +298,23 @@ export const AdminNoticesPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Issuing Department
-              </label>
+              <label className="jstu-label">Issuing Department</label>
               <input
                 type="text"
                 required
                 value={department}
                 onChange={(e) => setDepartment(e.target.value)}
                 placeholder="Academic Affairs"
-                className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="jstu-input"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Publishing Status
-              </label>
+              <label className="jstu-label">Publishing Status</label>
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value as 'published' | 'draft')}
-                className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-semibold"
+                className="jstu-select"
               >
                 <option value="published">Published</option>
                 <option value="draft">Save as Draft</option>
@@ -334,48 +323,42 @@ export const AdminNoticesPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-              Notice Content & Directive
-            </label>
+            <label className="jstu-label">Notice Content &amp; Directive</label>
             <textarea
               rows={5}
               required
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder="Provide complete announcements, seat plans, guidelines, and deadlines..."
-              className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
+              className="jstu-textarea"
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Attachment Document Name (Optional)
-              </label>
+              <label className="jstu-label">Attachment Document Name (Optional)</label>
               <input
                 type="text"
                 value={attachmentName}
                 onChange={(e) => setAttachmentName(e.target.value)}
                 placeholder="Midterm_Exam_Seat_Plan.pdf"
-                className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="jstu-input"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Attachment URL
-              </label>
+              <label className="jstu-label">Attachment URL</label>
               <input
                 type="url"
                 value={attachmentUrl}
                 onChange={(e) => setAttachmentUrl(e.target.value)}
                 placeholder="https://example.com/file.pdf"
-                className="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="jstu-input"
               />
             </div>
           </div>
 
-          <div className="flex items-center gap-2 pt-1">
+          <div className="flex items-center gap-2.5 pt-1">
             <input
               id="pinNotice"
               type="checkbox"
@@ -385,23 +368,23 @@ export const AdminNoticesPage: React.FC = () => {
             />
             <label
               htmlFor="pinNotice"
-              className="text-xs text-slate-700 dark:text-slate-300 font-semibold cursor-pointer select-none"
+              className="text-sm text-slate-700 dark:text-slate-300 font-semibold cursor-pointer select-none"
             >
-              Pin this notice prominently to top of the student dashboard & notice board
+              Pin this notice prominently to top of the student dashboard &amp; notice board
             </label>
           </div>
 
-          <div className="flex justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+          <div className="flex justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
-              className="px-4 py-2 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg"
+              className="jstu-btn-secondary"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg shadow-xs"
+              className="inline-flex items-center justify-center min-h-[42px] px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-[15px] font-semibold"
             >
               {editingId ? 'Update Notice' : 'Publish Notice'}
             </button>

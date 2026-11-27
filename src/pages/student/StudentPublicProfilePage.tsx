@@ -78,14 +78,9 @@ export const StudentPublicProfilePage: React.FC = () => {
 
   if (!profile) {
     return (
-      <div className="text-center py-12 space-y-4">
-        <h2 className="text-lg font-bold text-slate-900 dark:text-white">
-          Student Profile Not Found
-        </h2>
-        <Link
-          to="/community"
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-bold"
-        >
+      <div className="text-center py-14 space-y-4">
+        <h2 className="jstu-section-title">Student Profile Not Found</h2>
+        <Link to="/community" className="jstu-btn-primary">
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Community</span>
         </Link>
@@ -96,19 +91,18 @@ export const StudentPublicProfilePage: React.FC = () => {
   const isSelf = currentUser?.uid === profile.uid;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-7">
       <Link
         to="/community"
-        className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-blue-600"
+        className="inline-flex items-center gap-2 text-[15px] font-semibold text-slate-600 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400"
       >
         <ArrowLeft className="w-4 h-4" />
         <span>Back to Community</span>
       </Link>
 
-      {/* Profile Header Card */}
-      <div className="bg-white dark:bg-[#111C32] rounded-3xl p-6 sm:p-8 border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
+      <div className="jstu-surface p-6 sm:p-8 space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5">
+          <div className="flex items-center gap-5">
             <img
               src={sanitizeUrl(
                 profile.avatarUrl,
@@ -117,35 +111,35 @@ export const StudentPublicProfilePage: React.FC = () => {
                 )}`
               )}
               alt={profile.fullName}
-              className="w-20 h-20 rounded-2xl object-cover ring-4 ring-blue-500/15"
+              className="w-20 h-20 rounded-2xl object-cover border-2 border-blue-500/20"
             />
-            <div className="space-y-1">
-              <div className="flex flex-wrap items-center gap-2">
-                <h1 className="text-xl font-black text-slate-900 dark:text-white">
+            <div className="space-y-1.5">
+              <div className="flex flex-wrap items-center gap-2.5">
+                <h1 className="jstu-page-title">
                   {profile.fullName}
                 </h1>
                 <Badge variant={profile.role === 'admin' ? 'purple' : 'primary'} size="sm">
                   {profile.role === 'admin' ? 'Campus Admin' : 'Student'}
                 </Badge>
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2">
-                <Building className="w-3.5 h-3.5" />
+              <p className="text-[15px] text-slate-600 dark:text-slate-300 flex items-center gap-2">
+                <Building className="w-4 h-4 text-slate-400" />
                 <span>{profile.department}</span>
               </p>
-              <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2">
-                <GraduationCap className="w-3.5 h-3.5" />
+              <p className="text-sm text-slate-500 dark:text-slate-400 flex items-center gap-2">
+                <GraduationCap className="w-4 h-4 text-slate-400" />
                 <span>
-                  {profile.studentId} &bull; {profile.batch}
+                  <span className="font-mono">{profile.studentId}</span> &middot; {profile.batch}
                 </span>
               </p>
             </div>
           </div>
 
           {!isSelf && (
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2.5">
               <button
                 onClick={() => navigate(`/messages?to=${encodeURIComponent(profile.uid)}`)}
-                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold"
+                className="jstu-btn-primary"
               >
                 <MessageSquare className="w-4 h-4" />
                 <span>Message</span>
@@ -153,10 +147,10 @@ export const StudentPublicProfilePage: React.FC = () => {
 
               <button
                 onClick={handleToggleBlock}
-                className={`inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-bold ${
+                className={`jstu-btn-secondary ${
                   isBlocked
-                    ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300'
-                    : 'bg-slate-100 text-slate-600 hover:bg-rose-50 hover:text-rose-600 dark:bg-slate-800 dark:text-slate-300'
+                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/50 dark:text-emerald-300'
+                    : 'hover:text-rose-600 dark:hover:text-rose-400'
                 }`}
               >
                 {isBlocked ? <ShieldCheck className="w-4 h-4" /> : <Ban className="w-4 h-4" />}
@@ -165,8 +159,9 @@ export const StudentPublicProfilePage: React.FC = () => {
 
               <button
                 onClick={() => setIsReportOpen(true)}
-                className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-amber-600"
+                className="min-w-[42px] min-h-[42px] flex items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-amber-600"
                 title="Report user"
+                aria-label="Report user"
               >
                 <Flag className="w-4 h-4" />
               </button>
@@ -175,27 +170,27 @@ export const StudentPublicProfilePage: React.FC = () => {
         </div>
 
         {profile.bio && (
-          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 pt-4 border-t border-slate-100 dark:border-slate-800 leading-relaxed">
+          <p className="jstu-body pt-5 border-t border-slate-200/80 dark:border-slate-800">
             {profile.bio}
           </p>
         )}
       </div>
 
       {/* Activity Summary Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white dark:bg-[#111C32] rounded-3xl p-5 border border-slate-200/80 dark:border-slate-800 space-y-3">
-          <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-            <Users className="w-4 h-4 text-blue-500" /> Community Posts ({posts.length})
-          </h3>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div className="jstu-surface p-6 space-y-3.5">
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
+            <Users className="w-4 h-4 text-blue-600" /> Community Posts ({posts.length})
+          </h2>
           {posts.length === 0 ? (
-            <p className="text-xs text-slate-400">No community posts yet.</p>
+            <p className="text-[15px] text-slate-500 dark:text-slate-400">No community posts yet.</p>
           ) : (
-            <div className="space-y-2">
+            <div className="divide-y divide-slate-200/80 dark:divide-slate-800">
               {posts.slice(0, 4).map((p) => (
                 <Link
                   key={p.id}
                   to="/community"
-                  className="block p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 hover:bg-blue-50/60 text-xs font-bold text-slate-800 dark:text-slate-200 truncate"
+                  className="block py-2.5 text-[15px] font-semibold text-slate-800 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 truncate"
                 >
                   {p.title}
                 </Link>
@@ -204,19 +199,19 @@ export const StudentPublicProfilePage: React.FC = () => {
           )}
         </div>
 
-        <div className="bg-white dark:bg-[#111C32] rounded-3xl p-5 border border-slate-200/80 dark:border-slate-800 space-y-3">
-          <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-            <ShoppingBag className="w-4 h-4 text-blue-500" /> Marketplace ({marketplace.length})
-          </h3>
+        <div className="jstu-surface p-6 space-y-3.5">
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
+            <ShoppingBag className="w-4 h-4 text-blue-600" /> Marketplace ({marketplace.length})
+          </h2>
           {marketplace.length === 0 ? (
-            <p className="text-xs text-slate-400">No marketplace listings.</p>
+            <p className="text-[15px] text-slate-500 dark:text-slate-400">No marketplace listings.</p>
           ) : (
-            <div className="space-y-2">
+            <div className="divide-y divide-slate-200/80 dark:divide-slate-800">
               {marketplace.slice(0, 4).map((m) => (
                 <Link
                   key={m.id}
                   to="/marketplace"
-                  className="block p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 text-xs font-bold text-slate-800 dark:text-slate-200 truncate"
+                  className="block py-2.5 text-[15px] font-semibold text-slate-800 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 truncate tabular-nums"
                 >
                   {m.title} (${m.price})
                 </Link>
@@ -225,19 +220,19 @@ export const StudentPublicProfilePage: React.FC = () => {
           )}
         </div>
 
-        <div className="bg-white dark:bg-[#111C32] rounded-3xl p-5 border border-slate-200/80 dark:border-slate-800 space-y-3">
-          <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-            <BookCopy className="w-4 h-4 text-emerald-500" /> Book Exchange ({books.length})
-          </h3>
+        <div className="jstu-surface p-6 space-y-3.5">
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
+            <BookCopy className="w-4 h-4 text-emerald-600" /> Book Exchange ({books.length})
+          </h2>
           {books.length === 0 ? (
-            <p className="text-xs text-slate-400">No book listings.</p>
+            <p className="text-[15px] text-slate-500 dark:text-slate-400">No book listings.</p>
           ) : (
-            <div className="space-y-2">
+            <div className="divide-y divide-slate-200/80 dark:divide-slate-800">
               {books.slice(0, 4).map((b) => (
                 <Link
                   key={b.id}
                   to="/books"
-                  className="block p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 text-xs font-bold text-slate-800 dark:text-slate-200 truncate"
+                  className="block py-2.5 text-[15px] font-semibold text-slate-800 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 truncate"
                 >
                   {b.title}
                 </Link>

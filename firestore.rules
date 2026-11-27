@@ -32,11 +32,16 @@ service cloud.firestore {
     match /users/{userId} {
       // Authenticated campus members can read profiles for directory & public profiles
       allow read: if isAuthenticated();
-      // Users can create their own profile upon registration with default role 'student'
+      // Student registration must strictly initialize role == 'student'
       allow create: if isOwner(userId) && request.resource.data.role == 'student';
-      // Users can update their own permitted profile fields (cannot change role)
-      allow update: if (isOwner(userId) && request.resource.data.role == resource.data.role) || isAdmin();
-      // Only admins can delete user records
+      // Students can update their own safe profile details only (role, email, and studentId remain immutable)
+      allow update: if (
+        isOwner(userId) &&
+        request.resource.data.role == resource.data.role &&
+        request.resource.data.email == resource.data.email &&
+        request.resource.data.studentId == resource.data.studentId
+      ) || isAdmin();
+      // Only University Administration can delete user records
       allow delete: if isAdmin();
     }
 
@@ -284,6 +289,28 @@ service cloud.firestore {
       allow create: if isAuthenticated() &&
         request.resource.data.reporterId == request.auth.uid &&
         request.resource.data.status == 'pending';
+      allow update, delete: if isAdmin();
+    }
+
+    // My Lab Experiment Progress (Owner-scoped compact progress & settings)
+    match /labProgress/{progressId} {
+      allow read: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid || isAdmin()
+      );
+      allow create, update: if isAuthenticated() &&
+        request.resource.data.userId == request.auth.uid &&
+        progressId == (request.auth.uid + '_' + request.resource.data.experimentId);
+      allow delete: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid || isAdmin()
+      );
+    }
+
+    // University Transportation Routes (Admin full management; Students read published only)
+    match /transportationRoutes/{routeId} {
+      allow read: if isAuthenticated() && (
+        resource.data.published == true || isAdmin()
+      );
+      allow create: if isAdmin() && request.resource.data.createdBy == request.auth.uid;
       allow update, delete: if isAdmin();
     }
   }

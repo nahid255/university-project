@@ -39,7 +39,7 @@ export const EMPTY_SEARCH_RESULTS: GlobalSearchResults = {
 };
 
 /**
- * Performs a bounded parallel fetch across CampusMate modules and applies
+ * Performs a bounded parallel fetch across JSTU Campus modules and applies
  * case-insensitive substring matching on the client.
  * Note: Firestore does not natively support multi-field full-text search
  * without an external index, so queries are bounded via service limit()s.

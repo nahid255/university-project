@@ -13,16 +13,16 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   fullPage = false,
 }) => {
   const iconSizes = {
-    sm: 'w-4 h-4',
+    sm: 'w-5 h-5',
     md: 'w-7 h-7',
     lg: 'w-10 h-10',
   };
 
   const content = (
-    <div className="flex flex-col items-center justify-center gap-3 p-8">
+    <div className="flex flex-col items-center justify-center gap-3.5 p-10">
       <Loader2 className={`${iconSizes[size]} text-blue-600 dark:text-blue-400 animate-spin`} />
       {label && (
-        <p className="text-xs font-medium text-slate-500 dark:text-slate-400 tracking-wide uppercase">
+        <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
           {label}
         </p>
       )}
@@ -31,7 +31,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
 
   if (fullPage) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#F5F8FF] dark:bg-[#080F1F]">
+      <div className="min-h-screen flex items-center justify-center bg-[#F6F8FB] dark:bg-[#0B1120]">
         {content}
       </div>
     );
