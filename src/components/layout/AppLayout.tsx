@@ -3,7 +3,6 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { Navbar } from './Navbar';
 import { Sidebar } from './Sidebar';
 import { AdminSidebar } from './AdminSidebar';
-import { FirebaseStatusBanner } from '../common/FirebaseStatusBanner';
 
 export const AppLayout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -12,8 +11,6 @@ export const AppLayout: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#F6F8FB] dark:bg-[#0B1120] text-slate-900 dark:text-slate-100 transition-colors">
-      <FirebaseStatusBanner />
-
       <Navbar
         onToggleSidebar={() => setSidebarOpen((prev) => !prev)}
         isAdminArea={isAdminArea}

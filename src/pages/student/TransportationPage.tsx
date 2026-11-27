@@ -11,9 +11,7 @@ import {
   CheckCircle2,
   PauseCircle,
   ArrowRight,
-  Info,
 } from 'lucide-react';
-import { useAuth } from '../../context/AuthContext';
 import { getTransportationRoutes } from '../../services/transportationService';
 import { TransportationRoute, RouteStatus } from '../../types';
 import { Modal } from '../../components/common/Modal';
@@ -32,7 +30,6 @@ const OPERATING_DAYS = [
 ];
 
 export const TransportationPage: React.FC = () => {
-  const { isFirebase } = useAuth();
   const [routes, setRoutes] = useState<TransportationRoute[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -121,13 +118,6 @@ export const TransportationPage: React.FC = () => {
             Browse official published bus routes, ordered pickup stops, departure times, and service availability notices.
           </p>
         </div>
-
-        {!isFirebase && (
-          <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-blue-50 dark:bg-blue-950/50 border border-blue-200/80 dark:border-blue-800 text-sm font-medium text-blue-700 dark:text-blue-300 self-start md:self-center shrink-0">
-            <Info className="w-4 h-4" />
-            <span>Preview Schedules</span>
-          </div>
-        )}
       </section>
 
       {error && (

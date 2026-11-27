@@ -6,7 +6,6 @@ import {
   Lock,
   Eye,
   EyeOff,
-  Database,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
@@ -67,7 +66,7 @@ export const SettingsPage: React.FC = () => {
           <span>Account Preferences &amp; Security</span>
         </h1>
         <p className="jstu-secondary mt-1.5">
-          Customize portal appearance, update security credentials, and inspect platform status
+          Customize portal appearance and update your account security credentials
         </p>
       </div>
 
@@ -184,49 +183,6 @@ export const SettingsPage: React.FC = () => {
             {isUpdatingPw ? 'Updating...' : 'Update Password'}
           </button>
         </form>
-      </section>
-
-      {/* System & Architecture Diagnostics Card */}
-      <section className="jstu-surface p-6 sm:p-8 space-y-5">
-        <div>
-          <h2 className="jstu-section-title flex items-center gap-2.5">
-            <Database className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
-            <span>Database &amp; Cloud Architecture Status</span>
-          </h2>
-          <p className="jstu-secondary mt-1">
-            Platform storage driver and role governance summary
-          </p>
-        </div>
-
-        <div className="p-5 jstu-inset divide-y divide-slate-200/80 dark:divide-slate-700/70 text-[15px]">
-          <div className="flex flex-wrap items-center justify-between gap-2 py-2.5 first:pt-0">
-            <span className="text-slate-600 dark:text-slate-400">Database Driver</span>
-            <span className="font-semibold text-slate-900 dark:text-slate-100">
-              {isFirebase ? 'Google Cloud Firestore (Live)' : 'Local Storage Resilient Mode'}
-            </span>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-between gap-2 py-2.5">
-            <span className="text-slate-600 dark:text-slate-400">Authentication Layer</span>
-            <span className="font-semibold text-slate-900 dark:text-slate-100">
-              {isFirebase ? 'Firebase Authentication' : 'Local Auth Provider'}
-            </span>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-between gap-2 py-2.5">
-            <span className="text-slate-600 dark:text-slate-400">Current Account Role</span>
-            <span className="font-semibold text-blue-600 dark:text-blue-400 uppercase">
-              {currentUser?.role}
-            </span>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-between gap-2 py-2.5 last:pb-0">
-            <span className="text-slate-600 dark:text-slate-400">Security Rules Enforcement</span>
-            <span className="font-semibold text-emerald-600 dark:text-emerald-400">
-              Active (Role-Based RBAC &amp; Owner Isolation)
-            </span>
-          </div>
-        </div>
       </section>
     </div>
   );
